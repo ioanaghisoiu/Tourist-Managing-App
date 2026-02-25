@@ -5,7 +5,7 @@
 // #include "Example.h"
 
 int main() {
-    std::cout << "Hello, world!\n";
+    std::cout << "Hello, 1311 la 8 dimineata!!\n";
     Example e1;
     e1.g();
     std::array<int, 100> v{};
