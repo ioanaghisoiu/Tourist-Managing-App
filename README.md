@@ -1,3 +1,13 @@
+Tourist Managing App este conceput pentru managementul eficient al resurselor turistice și al fluxurilor de interacțiune dintre vizitatori și locații culturale.
+
+
+
+
+
+
+
+
+
 # Nu primesc notă pentru că nu am pus titlu și descriere
 
 ### Folosiți template-ul corespunzător grupei voastre!
