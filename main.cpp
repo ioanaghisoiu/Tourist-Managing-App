@@ -1,11 +1,49 @@
 #include <iostream>
 #include <array>
+#include <vector>
+
 #include "include/Example.h"
 // This also works if you do not want `include/`, but some editors might not like it
 // #include "Example.h"
 
+class Person {
+private:
+    std::string name;
+    std::string surname;
+    int age;
+    std::string email;
+public:
+    Person(const std::string& name_, const std::string& surname_, int age_, const std::string& email_):
+    name(name_), surname(surname_), age(age_), email(email_) {}
+};
+
+class Group {
+private:
+    std::vector<Person> persons;
+    Person guide;
+    long museum_code;
+};
+
+class Location {
+private:
+    std:: string country;
+    std:: string address;
+
+};
+
+class Museum {
+private:
+    std::string name;
+    long code;
+    Location location;
+
+};
+
+
+
+
 int main() {
-    std::cout << "Hello, 1311 la 8 dimineata!!\n";
+    std::cout << "Hello, world!\n";
     Example e1;
     e1.g();
     std::array<int, 100> v{};
