@@ -15,7 +15,14 @@ private:
 public:
     Person(const std::string& name_, const std::string& surname_, int age_, const std::string& email_):
     name(name_), surname(surname_), age(age_), email(email_) {}
+
+    friend std::ostream& operator<<(std::ostream& os, const Person& p)
+    {
+        os<<"Name: "<<p.name<<" ,Surname: "<< p.surname<< ", Age: ",<<", age"<<", Email: "<<p.email<<"\n";
+        return os;
+    }
 };
+
 
 class Group {
 private:
@@ -34,6 +41,10 @@ private:
 public:
     Location(const std::string& country_, const std::string& address_): country(country_), address(address_) {}
 
+    friend std::ostream& operator<<(std::ostream& os, const Location& l) {
+       os<<"Country: "<<l.country<<", Adress: "<<l.address<<"\n";
+        return os;
+    }
 };
 
 class Museum {
@@ -45,7 +56,21 @@ public:
     Museum(const std::string& name_, long code_, const Location& location_) :
         name(name_), code(code_), location(location_) {}
 
+    Museum (const Museum& other) : name(other.name), code(other.code), location(other.location) {}
 
+    Museum& operator=(const Student& other) {
+        name = other.name;
+        code = other.code;
+        location = other.location;
+        return *this;
+    }
+
+    ~Museum(){}
+
+    friend std::ostream& operator<<(std::ostream& os, const Museum& m) {
+        os<<"Museum name: "<<m.name<<", Code"<<code<<", Location: "<<m.location<<"\n";
+        return os;
+    }
 };
 
 
