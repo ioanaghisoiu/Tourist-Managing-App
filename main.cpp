@@ -18,7 +18,7 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, const Person& p)
     {
-        os<<"Name: "<<p.name<<" ,Surname: "<< p.surname<< ", Age: ",<<", age"<<", Email: "<<p.email<<"\n";
+        os<<"Name: "<<p.name<<" ,Surname: "<< p.surname<< ", Age: "<<p.age<<", Email: "<<p.email<<"\n";
         return os;
     }
 };
@@ -32,6 +32,15 @@ private:
 public:
     Group(const std::vector<Person>& persons_, const Person& guide_, long museum_code_) :
         persons(persons_), guide(guide_), museum_code(museum_code_) {}
+
+    friend std::ostream& operator<<(std::ostream& os, const Group& g) {
+        os << "Group for Museum Code: " << g.museum_code << ", Guide: " << g.guide;
+        os << ", Members: ";
+        for (const auto& group : g.persons) {
+            os << " - " << group;
+        }
+        return os;
+    }
 };
 
 class Location {
@@ -58,7 +67,7 @@ public:
 
     Museum (const Museum& other) : name(other.name), code(other.code), location(other.location) {}
 
-    Museum& operator=(const Student& other) {
+    Museum& operator=(const Museum& other) {
         name = other.name;
         code = other.code;
         location = other.location;
@@ -68,7 +77,7 @@ public:
     ~Museum(){}
 
     friend std::ostream& operator<<(std::ostream& os, const Museum& m) {
-        os<<"Museum name: "<<m.name<<", Code"<<code<<", Location: "<<m.location<<"\n";
+        os<<"Museum name: "<<m.name<<", Code"<<m.code<<", Location: "<<m.location<<"\n";
         return os;
     }
 };
