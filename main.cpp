@@ -22,12 +22,17 @@ private:
     std::vector<Person> persons;
     Person guide;
     long museum_code;
+public:
+    Group(const std::vector<Person>& persons_, const Person& guide_, long museum_code_) :
+        persons(persons_), guide(guide_), museum_code(museum_code_) {}
 };
 
 class Location {
 private:
     std:: string country;
     std:: string address;
+public:
+    Location(const std::string& country_, const std::string& address_): country(country_), address(address_) {}
 
 };
 
@@ -36,6 +41,10 @@ private:
     std::string name;
     long code;
     Location location;
+public:
+    Museum(const std::string& name_, long code_, const Location& location_) :
+        name(name_), code(code_), location(location_) {}
+
 
 };
 
