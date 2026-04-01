@@ -1,7 +1,1 @@
-.clang-tidy linguist-vendored
-LICENSE linguist-vendored
-tastatura.txt linguist-vendored
-README.md linguist-documentation
-
-*.cpp linguist-language=cpp
-*.h linguist-language=cpp
+ext/** linguist-vendoredg
