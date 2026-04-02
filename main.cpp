@@ -120,15 +120,56 @@ public:
 
 class Location {
 private:
-    std::string country;
+    std::string county;
     std::string address;
+    int sirutaCode;
+
 public:
-    Location(const std::string& country_, const std::string& address_) : country(country_), address(address_) {}
-    friend std::ostream& operator<<(std::ostream& os, const Location& l) {
-        os << l.address << ", " << l.country;
+
+    Location(std::string county_, std::string address_, int siruta_)
+        : county{std::move(county_)}, address{std::move(address_)}, sirutaCode{siruta_} {}
+
+    Location() : county{"N/A"}, address{"N/A"}, sirutaCode{0} {}
+
+    const std::string& getCounty() const { return county; }
+    int getSirutaCode() const { return sirutaCode; }
+
+    friend std::ostream& operator<<(std::ostream& os, const Location& loc) {
+        os << loc.address << ", jud. " << loc.county << " (Cod SIRUTA: " << loc.sirutaCode << ")";
         return os;
     }
 };
+
+
+
+class Exhibition {
+private:
+    std::string title;
+    double extraFee;
+    int itemsCount;
+
+public:
+
+    explicit Exhibition(std::string title_ = "Expozitie Generica", double fee_ = 0.0, int items_ = 0)
+        : title{std::move(title_)},
+          extraFee{fee_},
+          itemsCount{items_}
+    {}
+
+    int getEstimatedVisitTime() const {
+        const int minutesPerItem = 2;
+        return itemsCount * minutesPerItem;
+    }
+
+    double getExtraFee() const { return extraFee; }
+    int getItemsCount() const { return itemsCount; }
+
+    friend std::ostream& operator<<(std::ostream& os, const Exhibition& ex) {
+        os << "  - " << ex.title << " (" << ex.itemsCount << " exponate) | Taxa: " << ex.extraFee << " RON";
+        return os;
+    }
+};
+
 
 
 class Museum {
@@ -136,20 +177,68 @@ private:
     std::string name;
     long code;
     Location location;
+    std::vector<Exhibition> exhibitions;
+
+    int* popularityVotes;
+    int votesCapacity;
+
 public:
-    Museum(const std::string& name_, long code_, const Location& location_) : name(name_), code(code_), location(location_) {}
-    Museum(const Museum& other) : name(other.name), code(other.code), location(other.location) {}
+    Museum(std::string name_, long code_, Location loc_, int cap_ = 5)
+        : name{std::move(name_)}, code{code_}, location{std::move(loc_)}, votesCapacity{cap_} {
+        popularityVotes = new int[votesCapacity]{0};
+    }
+
+
+    ~Museum() { delete[] popularityVotes; }
+
+    Museum(const Museum& other)
+        : name{other.name}, code{other.code}, location{other.location},
+          exhibitions{other.exhibitions}, votesCapacity{other.votesCapacity} {
+        popularityVotes = new int[votesCapacity];
+        for (int i = 0; i < votesCapacity; ++i)
+            popularityVotes[i] = other.popularityVotes[i];
+    }
+
     Museum& operator=(const Museum& other) {
-        if (this != &other) { name = other.name; code = other.code; location = other.location; }
+        if (this != &other) {
+            name = other.name;
+            code = other.code;
+            location = other.location;
+            exhibitions = other.exhibitions;
+
+            int* newVotes = new int[other.votesCapacity];
+            for (int i = 0; i < other.votesCapacity; ++i)
+                newVotes[i] = other.popularityVotes[i];
+
+            delete[] popularityVotes;
+            popularityVotes = newVotes;
+            votesCapacity = other.votesCapacity;
+        }
         return *this;
     }
-    ~Museum() {}
+
+
+    int getTotalItemsCount() const {
+        int total = 0;
+        for (const auto& ex : exhibitions) {
+            total += ex.getItemsCount();
+        }
+        return total;
+    }
+
+    void addExhibition(const Exhibition& ex) {
+        exhibitions.push_back(ex);
+    }
+
     friend std::ostream& operator<<(std::ostream& os, const Museum& m) {
-        os << "Muzeu: " << m.name << " (Cod: " << m.code << ") | Locatie: " << m.location;
+        os << "MUZEU: " << m.name << " [Cod: " << m.code << "]\n"
+           << "Locatie: " << m.location << "\n"
+           << "Total exponate: " << m.getTotalItemsCount() << "\n"
+           << "Expozitii active:\n";
+        for (const auto& e : m.exhibitions) os << e << "\n";
         return os;
     }
 };
-
 
 int main() {
     try {
