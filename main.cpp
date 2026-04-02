@@ -12,6 +12,29 @@ public:
 };
 
 
+class Date {
+private:
+    int d, m, y;
+public:
+    explicit Date(int d_ = 1, int m_ = 1, int y_ = 2024) : d{d_}, m{m_}, y{y_} {}
+    bool isValid() const {
+        if (y < 1800 || y > 2100) return false;
+        if (m < 1 || m > 12) return false;
+        int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        if (m == 2 && ((y % 4 == 0 && y % 100 != 0) || (y % 400 == 0))) daysInMonth[1] = 29;
+        return d >= 1 && d <= daysInMonth[m - 1];
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Date& dt) {
+        os << dt.d << "/" << dt.m << "/" << dt.y;
+        return os;
+    }
+
+    bool operator==(const Date& other) const { return d == other.d && m == other.m && y == other.y; }
+};
+
+
+
 class Ticket {
 private:
     double basePrice;
@@ -134,10 +157,18 @@ public:
     const std::string& getCounty() const { return county; }
     int getSirutaCode() const { return sirutaCode; }
 
+    bool operator==(const Location& other) const {
+        return county == other.county && address == other.address && sirutaCode == other.sirutaCode;
+    }
+    bool operator!=(const Location& other) const { return !(*this == other); }
+
     friend std::ostream& operator<<(std::ostream& os, const Location& loc) {
         os << loc.address << ", jud. " << loc.county << " (Cod SIRUTA: " << loc.sirutaCode << ")";
         return os;
     }
+
+
+
 };
 
 
@@ -156,6 +187,14 @@ public:
           itemsCount{items_}
     {}
 
+    bool isPremiumExhibition() const {
+        return extraFee > 50.0;
+    }
+
+    bool operator==(const Exhibition& other) const {
+        return title == other.title && extraFee == other.extraFee && itemsCount == other.itemsCount;
+    }
+
     int getEstimatedVisitTime() const {
         const int minutesPerItem = 2;
         return itemsCount * minutesPerItem;
@@ -168,6 +207,8 @@ public:
         os << "  - " << ex.title << " (" << ex.itemsCount << " exponate) | Taxa: " << ex.extraFee << " RON";
         return os;
     }
+
+
 };
 
 
@@ -215,6 +256,17 @@ public:
             votesCapacity = other.votesCapacity;
         }
         return *this;
+    }
+
+
+    bool operator==(const Museum& other) const {
+        if (code != other.code || name != other.name || !(location == other.location)) return false;
+        if (exhibitions.size() != other.exhibitions.size()) return false;
+        if (votesCapacity != other.votesCapacity) return false;
+        for (int i = 0; i < votesCapacity; ++i) {
+            if (popularityVotes[i] != other.popularityVotes[i]) return false;
+        }
+        return true;
     }
 
 
