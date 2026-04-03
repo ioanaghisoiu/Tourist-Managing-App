@@ -138,6 +138,17 @@ public:
     bool isReadyForVisit() const {
         return !persons.empty() && persons.size() <= 10 && guide.getAge() >= 18 && museum_code != 0;
     }
+
+
+    double calculateTotalRevenue() const {
+        double total = 0;
+        for (const auto& p : persons) {
+            if (p.getAge() < 18) total += 10.0;
+            else if (p.getAge() > 65) total += 15.0;
+            else total += 25.0;
+        }
+        return total;
+    }
 };
 
 
@@ -195,6 +206,14 @@ public:
         return title == other.title && extraFee == other.extraFee && itemsCount == other.itemsCount;
     }
 
+
+
+    bool operator<(const Exhibition& other) const {
+        if (extraFee != other.extraFee)
+            return extraFee < other.extraFee;
+        return itemsCount < other.itemsCount;
+    }
+
     int getEstimatedVisitTime() const {
         const int minutesPerItem = 2;
         return itemsCount * minutesPerItem;
@@ -219,7 +238,7 @@ private:
     long code;
     Location location;
     std::vector<Exhibition> exhibitions;
-
+    static int totalMuseumsCreated;
     int* popularityVotes;
     int votesCapacity;
 
@@ -227,6 +246,7 @@ public:
     Museum(std::string name_, long code_, Location loc_, int cap_ = 5)
         : name{std::move(name_)}, code{code_}, location{std::move(loc_)}, votesCapacity{cap_} {
         popularityVotes = new int[votesCapacity]{0};
+        totalMuseumsCreated++;
     }
 
 
@@ -258,6 +278,7 @@ public:
         return *this;
     }
 
+    static int getTotalMuseums() { return totalMuseumsCreated; }
 
     bool operator==(const Museum& other) const {
         if (code != other.code || name != other.name || !(location == other.location)) return false;
@@ -291,6 +312,7 @@ public:
         return os;
     }
 };
+int Museum::totalMuseumsCreated = 0;
 
 int main() {
     try {
