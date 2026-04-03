@@ -85,11 +85,24 @@ public:
 
     std::string getName() const { return name; }
     std::string getEmail() const { return email; }
+    void setName(const std::string& newName) { name = newName; }
+    void setSurname(const std::string& newSurname) { surname = newSurname; }
     int getAge() const { return age; }
 
     friend std::ostream& operator<<(std::ostream& os, const Person& p) {
         os << p.name << " " << p.surname << " (" << p.age << " ani, Bilet: " << p.ticket << ")";
         return os;
+    }
+
+    void setEmail(const std::string& newEmail) {
+        email = newEmail;
+        validateEmail();
+    }
+    void setAge(int newAge) {
+        if (newAge >= 0) age = newAge;
+    }
+    bool isMinor() const {
+        return age < 18;
     }
 };
 
@@ -168,6 +181,9 @@ public:
     const std::string& getCounty() const { return county; }
     int getSirutaCode() const { return sirutaCode; }
 
+    void updateAddress(const std::string& newAddress) {
+        if (!newAddress.empty()) address = newAddress;
+    }
     bool operator==(const Location& other) const {
         return county == other.county && address == other.address && sirutaCode == other.sirutaCode;
     }
@@ -206,8 +222,6 @@ public:
         return title == other.title && extraFee == other.extraFee && itemsCount == other.itemsCount;
     }
 
-
-
     bool operator<(const Exhibition& other) const {
         if (extraFee != other.extraFee)
             return extraFee < other.extraFee;
@@ -227,7 +241,20 @@ public:
         return os;
     }
 
+    void setTitle(const std::string& newTitle) {
+        if (!newTitle.empty())
+            title = newTitle;
+    }
+    void updatePrice(double newFee) {
+        if (newFee >= 0)
+            extraFee = newFee;
+    }
+    void addItems(int count) {
+        if (count > 0)
+            itemsCount += count;
+    }
 
+    std::string getTitle() const { return title; }
 };
 
 
@@ -303,6 +330,15 @@ public:
         exhibitions.push_back(ex);
     }
 
+    bool hasExhibition(const std::string& searchTitle) const {
+        for (const auto& ex : exhibitions) {
+            if (ex.getTitle() == searchTitle) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     friend std::ostream& operator<<(std::ostream& os, const Museum& m) {
         os << "MUZEU: " << m.name << " [Cod: " << m.code << "]\n"
            << "Locatie: " << m.location << "\n"
@@ -314,42 +350,51 @@ public:
 };
 int Museum::totalMuseumsCreated = 0;
 
-int main() {
-    try {
-        Location loc("Romania", "Calea Victoriei 12");
-        Museum m1("Muzeul de Arta", 505, loc);
+class MuseumApp {
+public:
+    static void run() {
+        std::cout << "Tourist Managing App"\n\n";
+
+        Location loc("Bucuresti", "Calea Victoriei 12", 179132);
+        Museum antipa("Grigore Antipa", 101, loc);
+        antipa.addExhibition(Exhibition("Lumea Insectelor", 15.0, 120));
+        antipa.addExhibition(Exhibition("Comorile Adancurilor", 25.0, 45));
+
+        std::cout << antipa << std::endl;
+        Person guide("Ion", "Popescu", 35, "ion.p@museum.ro", 0);
+        Person p1("Andrei", "Ionescu", 20, "andrei@mail.com", 30.0);
+        Person p2("Maria", "Enache", 15, "maria@mail.com", 30.0);
+
+        std::vector<Person> initialMembers = {p1};
+        Group group(initialMembers, guide, 101);
+
+        try {
+            group.addMember(p2);
+            std::cout << "Membru adaugat cu succes.\n";
 
 
-        Museum m2 = m1;
-
-        Person ghid("Ion", "Ghidul", 35, "ion4@gmail.com", 0);
-        std::vector<Person> init;
-        Group grup1(init, ghid, 505);
-
-
-        int nr;
-        std::cout << "Cati vizitatori adaugam? ";
-        if(!(std::cin >> nr)) nr = 0;
-
-        for(int i = 0; i < nr; ++i) {
-            std::string n, s, e;
-            int a;
-            double p;
-            std::cout << "Date (Nume Prenume Varsta Email PretBilet): ";
-            std::cin >> n >> s >> a >> e >> p;
-            Person v(n, s, a, e, p);
-            v.validateEmail();
-            grup1.addMember(v);
+            group.addMember(p1);
+        } catch (const std::exception& e) {
+            std::cerr << e.what() << std::endl;
         }
 
-        std::cout << "\n---VIZITA---\n";
-        std::cout << m1 << "\n" << grup1 << "\n";
-        std::cout << "Medie varsta: " << grup1.calculateAverageAge() << "\n";
+        std::cout << "\nStatistici Grup:\n";
+        std::cout << "Varsta medie: " << group.calculateAverageAge() << " ani\n";
+        std::cout << "Venit total estimat: " << group.calculateTotalRevenue() << " RON\n";
+        std::cout << "Grupul este pregatit: " << (group.isReadyForVisit() ? "DA" : "NU") << "\n";
 
-        if(grup1.isReadyForVisit()) std::cout << "Grupul poate intra!\n";
+        std::cout << "\n--- Detalii Grup Complete ---\n" << group << std::endl;
 
-    } catch (const std::exception& ex) {
-        std::cerr << "Eroare: " << ex.what() << "\n";
+        Museum antipaCopy = antipa;
+        std::cout << "Copie muzeu creata. Total muzee: " << Museum::getTotalMuseums() << "\n";
+
+        std::cout << "\n--- Program Finalizat ---" << std::endl;
     }
+};
+
+
+int main()
+{
+    MuseumApp::run();
     return 0;
 }
