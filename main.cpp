@@ -54,6 +54,12 @@ public:
         return price;
     }
 
+    bool operator==(const Ticket& other) const {
+        return basePrice == other.basePrice && currency == other.currency &&
+               isPriority == other.isPriority;
+    }
+    bool operator!=(const Ticket& other) const { return !(*this == other); }
+
     friend std::ostream& operator<<(std::ostream& os, const Ticket& t) {
         os << t.basePrice << " " << t.currency << (t.isPriority ? " (Priority)" : "");
         return os;
@@ -104,6 +110,12 @@ public:
     bool isMinor() const {
         return age < 18;
     }
+
+    bool operator==(const Person& other) const {
+        return name == other.name && surname == other.surname &&
+               age == other.age && email == other.email;
+    }
+    bool operator!=(const Person& other) const { return !(*this == other); }
 };
 
 
@@ -152,6 +164,11 @@ public:
         return !persons.empty() && persons.size() <= 10 && guide.getAge() >= 18 && museum_code != 0;
     }
 
+    bool operator==(const Group& other) const {
+        return museum_code == other.museum_code &&
+               guide == other.guide && persons == other.persons;
+    }
+    bool operator!=(const Group& other) const { return !(*this == other); }
 
     double calculateTotalRevenue() const {
         double total = 0;
@@ -353,7 +370,7 @@ int Museum::totalMuseumsCreated = 0;
 class MuseumApp {
 public:
     static void run() {
-        std::cout << "Tourist Managing App"\n\n";
+        std::cout << "Tourist Managing App\n";
 
         Location loc("Bucuresti", "Calea Victoriei 12", 179132);
         Museum antipa("Grigore Antipa", 101, loc);
@@ -383,7 +400,7 @@ public:
         std::cout << "Venit total estimat: " << group.calculateTotalRevenue() << " RON\n";
         std::cout << "Grupul este pregatit: " << (group.isReadyForVisit() ? "DA" : "NU") << "\n";
 
-        std::cout << "\n--- Detalii Grup Complete ---\n" << group << std::endl;
+        std::cout << "--- Detalii Grup Complete ---\n" << group << std::endl;
 
         Museum antipaCopy = antipa;
         std::cout << "Copie muzeu creata. Total muzee: " << Museum::getTotalMuseums() << "\n";
