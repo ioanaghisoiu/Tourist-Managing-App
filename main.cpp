@@ -74,6 +74,13 @@ public:
         return os;
     }
 
+    friend std::istream& operator>>(std::istream& is, Ticket& t) {
+        std::cout << "Pret bilet: "; is >> t.basePrice;
+        std::cout << "Moneda: "; is >> t.currency;
+        std::cout << "Priority (1/0): "; is >> t.isPriority;
+        return is;
+    }
+
 
 };
 
@@ -457,7 +464,7 @@ public:
 
 
         Exhibition ex1("Arta Moderna", 60.0, 30);
-        std::cout << "\nExpozitie premium: " << (ex1.isPremiumExhibition() ? "DA" : "NU") << "\n";
+        std::cout << "Expozitie premium: " << (ex1.isPremiumExhibition() ? "DA" : "NU") << "\n";
         std::cout << "Timp estimat vizita: " << ex1.getEstimatedVisitTime() << " minute\n";
         ex1.addItems(10);
         std::cout << "Dupa addItems(10): " << ex1 << "\n";
@@ -467,7 +474,7 @@ public:
         std::cout << "Dupa setTitle: " << ex1 << "\n";
 
 
-        std::cout << "\nMuzeul are expozitia 'Lumea Insectelor': "
+        std::cout << "Muzeul are expozitia 'Lumea Insectelor': "
                   << (antipa.hasExhibition("Lumea Insectelor") ? "DA" : "NU") << "\n";
         std::cout << "Muzeul are expozitia 'Arta Moderna': "
                   << (antipa.hasExhibition("Arta Moderna") ? "DA" : "NU") << "\n";
@@ -492,24 +499,29 @@ public:
         Museum antipaCopy = antipa;
         std::cout << "Copie muzeu creata. Total muzee: " << Museum::getTotalMuseums() << "\n";
 
-        std::cout << "\n--- Adauga expozitie noua ---\n";
+        std::cout << "--- Adauga expozitie noua ---\n";
         Exhibition exNou;
         std::cin >> exNou;
         std::cout << "Expozitie introdusa: " << exNou << "\n";
         antipa.addExhibition(exNou);
         std::cout << "Total exponate acum: " << antipa.getTotalItemsCount() << "\n";
 
-        std::cout << "\n--- Adauga locatie noua ---\n";
+        std::cout << "--- Adauga locatie noua ---\n";
         Location locNou;
         std::cin >> locNou;
         std::cout << "Locatie introdusa: " << locNou << "\n";
 
-        std::cout << "\n--- Verifica data vizitei ---\n";
+        std::cout << "--- Verifica data vizitei ---\n";
         Date dNou;
         std::cin >> dNou;
         std::cout << "Data introdusa: " << dNou << " - valida: " << (dNou.isValid() ? "DA" : "NU") << "\n";
 
-        std::cout << "\n--- Program Finalizat ---" << std::endl;
+        std::cout << "--- Adauga bilet nou ---\n";
+        Ticket tNou;
+        std::cin >> tNou;
+        std::cout << "Bilet introdus: " << tNou << "\n";
+
+        std::cout << "--- Program Finalizat ---" << std::endl;
     }
 };
 
