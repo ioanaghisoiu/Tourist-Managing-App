@@ -66,6 +66,13 @@ public:
         os << t.basePrice << " " << t.currency << (t.isPriority ? " (Priority)" : "");
         return os;
     }
+
+    friend std::istream& operator>>(std::istream& is, Date& dt) {
+        std::cout << "Zi: "; is >> dt.d;
+        std::cout << "Luna: "; is >> dt.m;
+        std::cout << "An: "; is >> dt.y;
+        return is;
+    }
 };
 
 
@@ -219,6 +226,12 @@ public:
         return os;
     }
 
+    friend std::istream& operator>>(std::istream& is, Location& loc) {
+        std::cout << "Judet: "; is >> loc.county;
+        std::cout << "Adresa: "; is >> loc.address;
+        std::cout << "Cod SIRUTA: "; is >> loc.sirutaCode;
+        return is;
+    }
 
 
 };
@@ -264,6 +277,13 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Exhibition& ex) {
         os << "  - " << ex.title << " (" << ex.itemsCount << " exponate) | Taxa: " << ex.extraFee << " RON";
         return os;
+    }
+
+    friend std::istream& operator>>(std::istream& is, Exhibition& ex) {
+        std::cout << "Titlu expozitie: "; is >> ex.title;
+        std::cout << "Taxa extra: "; is >> ex.extraFee;
+        std::cout << "Numar exponate: "; is >> ex.itemsCount;
+        return is;
     }
 
     void setTitle(const std::string& newTitle) {
@@ -417,7 +437,7 @@ public:
 
         std::vector<Person> sortedPersons = {p2, p1, guide};
         std::sort(sortedPersons.begin(), sortedPersons.end());
-        std::cout << "\nPersoane sortate dupa varsta:\n";
+        std::cout << "Persoane sortate dupa varsta:\n";
         for (const auto& p : sortedPersons) std::cout << " - " << p << "\n";
 
         Date d1(15, 3, 2024);
@@ -428,7 +448,7 @@ public:
 
         Ticket t1(30.0, "RON", false);
         Ticket t2(50.0, "RON", true);
-        std::cout << "\nPret final pentru copil (15 ani): " << t1.getFinalPrice(15) << " RON\n";
+        std::cout << "Pret final pentru copil (15 ani): " << t1.getFinalPrice(15) << " RON\n";
         std::cout << "Pret final pentru adult (30 ani): " << t1.getFinalPrice(30) << " RON\n";
         std::cout << "Pret final pentru senior (70 ani): " << t1.getFinalPrice(70) << " RON\n";
         std::cout << "Pret bilet priority pentru adult: " << t2.getFinalPrice(30) << " RON\n";
@@ -453,10 +473,10 @@ public:
 
 
         loc.updateAddress("Calea Victoriei 99");
-        std::cout << "\nAdresa actualizata: " << loc << "\n";
+        std::cout << "Adresa actualizata: " << loc << "\n";
 
 
-        std::cout << "\nTest limita grup (max 10 membri):\n";
+        std::cout << "Test limita grup (max 10 membri):\n";
         Group groupFull(initialMembers, guide, 101);
         try {
             for(int i = 0; i < 10; i++) {
@@ -467,9 +487,25 @@ public:
             std::cerr << e.what() << "\n";
         }
 
-
         Museum antipaCopy = antipa;
         std::cout << "Copie muzeu creata. Total muzee: " << Museum::getTotalMuseums() << "\n";
+
+        std::cout << "\n--- Adauga expozitie noua ---\n";
+        Exhibition exNou;
+        std::cin >> exNou;
+        std::cout << "Expozitie introdusa: " << exNou << "\n";
+        antipa.addExhibition(exNou);
+        std::cout << "Total exponate acum: " << antipa.getTotalItemsCount() << "\n";
+
+        std::cout << "\n--- Adauga locatie noua ---\n";
+        Location locNou;
+        std::cin >> locNou;
+        std::cout << "Locatie introdusa: " << locNou << "\n";
+
+        std::cout << "\n--- Verifica data vizitei ---\n";
+        Date dNou;
+        std::cin >> dNou;
+        std::cout << "Data introdusa: " << dNou << " - valida: " << (dNou.isValid() ? "DA" : "NU") << "\n";
 
         std::cout << "\n--- Program Finalizat ---" << std::endl;
     }
