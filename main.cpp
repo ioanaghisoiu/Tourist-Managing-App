@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <exception>
+#include <algorithm>
 
 
 class GroupThresholdException : public std::exception {
@@ -60,6 +61,7 @@ public:
     }
     bool operator!=(const Ticket& other) const { return !(*this == other); }
 
+
     friend std::ostream& operator<<(std::ostream& os, const Ticket& t) {
         os << t.basePrice << " " << t.currency << (t.isPriority ? " (Priority)" : "");
         return os;
@@ -116,6 +118,9 @@ public:
                age == other.age && email == other.email;
     }
     bool operator!=(const Person& other) const { return !(*this == other); }
+    bool operator<(const Person& other) const {
+        return age < other.age;
+    }
 };
 
 
@@ -169,6 +174,9 @@ public:
                guide == other.guide && persons == other.persons;
     }
     bool operator!=(const Group& other) const { return !(*this == other); }
+    bool operator<(const Group& other) const {
+        return persons.size() < other.persons.size();
+    }
 
     double calculateTotalRevenue() const {
         double total = 0;
@@ -378,6 +386,7 @@ public:
         antipa.addExhibition(Exhibition("Comorile Adancurilor", 25.0, 45));
 
         std::cout << antipa << std::endl;
+
         Person guide("Ion", "Popescu", 35, "ion.p@museum.ro", 0);
         Person p1("Andrei", "Ionescu", 20, "andrei@mail.com", 30.0);
         Person p2("Maria", "Enache", 15, "maria@mail.com", 30.0);
@@ -388,19 +397,76 @@ public:
         try {
             group.addMember(p2);
             std::cout << "Membru adaugat cu succes.\n";
-
-
             group.addMember(p1);
         } catch (const std::exception& e) {
             std::cerr << e.what() << std::endl;
         }
 
-        std::cout << "\nStatistici Grup:\n";
+        std::cout << "Statistici Grup:\n";
         std::cout << "Varsta medie: " << group.calculateAverageAge() << " ani\n";
         std::cout << "Venit total estimat: " << group.calculateTotalRevenue() << " RON\n";
         std::cout << "Grupul este pregatit: " << (group.isReadyForVisit() ? "DA" : "NU") << "\n";
 
         std::cout << "--- Detalii Grup Complete ---\n" << group << std::endl;
+
+
+        Person p3 = p1;
+        std::cout << (p1 == p3 ? "Persoane egale\n" : "Persoane diferite\n");
+        std::cout << (p1 == p2 ? "Persoane egale\n" : "Persoane diferite\n");
+
+
+        std::vector<Person> sortedPersons = {p2, p1, guide};
+        std::sort(sortedPersons.begin(), sortedPersons.end());
+        std::cout << "\nPersoane sortate dupa varsta:\n";
+        for (const auto& p : sortedPersons) std::cout << " - " << p << "\n";
+
+        Date d1(15, 3, 2024);
+        std::cout << "Data: " << d1 << " este valida: " << (d1.isValid() ? "DA" : "NU") << "\n";
+        Date d2(31, 2, 2024);
+        std::cout << "Data: " << d2 << " este valida: " << (d2.isValid() ? "DA" : "NU") << "\n";
+
+
+        Ticket t1(30.0, "RON", false);
+        Ticket t2(50.0, "RON", true);
+        std::cout << "\nPret final pentru copil (15 ani): " << t1.getFinalPrice(15) << " RON\n";
+        std::cout << "Pret final pentru adult (30 ani): " << t1.getFinalPrice(30) << " RON\n";
+        std::cout << "Pret final pentru senior (70 ani): " << t1.getFinalPrice(70) << " RON\n";
+        std::cout << "Pret bilet priority pentru adult: " << t2.getFinalPrice(30) << " RON\n";
+
+
+        Exhibition ex1("Arta Moderna", 60.0, 30);
+        std::cout << "\nExpozitie premium: " << (ex1.isPremiumExhibition() ? "DA" : "NU") << "\n";
+        std::cout << "Timp estimat vizita: " << ex1.getEstimatedVisitTime() << " minute\n";
+        ex1.addItems(10);
+        std::cout << "Dupa addItems(10): " << ex1 << "\n";
+        ex1.updatePrice(45.0);
+        std::cout << "Dupa updatePrice(45): " << ex1 << "\n";
+        ex1.setTitle("Arta Contemporana");
+        std::cout << "Dupa setTitle: " << ex1 << "\n";
+
+
+        std::cout << "\nMuzeul are expozitia 'Lumea Insectelor': "
+                  << (antipa.hasExhibition("Lumea Insectelor") ? "DA" : "NU") << "\n";
+        std::cout << "Muzeul are expozitia 'Arta Moderna': "
+                  << (antipa.hasExhibition("Arta Moderna") ? "DA" : "NU") << "\n";
+        std::cout << "Total exponate in muzeu: " << antipa.getTotalItemsCount() << "\n";
+
+
+        loc.updateAddress("Calea Victoriei 99");
+        std::cout << "\nAdresa actualizata: " << loc << "\n";
+
+
+        std::cout << "\nTest limita grup (max 10 membri):\n";
+        Group groupFull(initialMembers, guide, 101);
+        try {
+            for(int i = 0; i < 10; i++) {
+                groupFull.addMember(Person("Test" + std::to_string(i), "User", 25,
+                                   "test" + std::to_string(i) + "@mail.com", 20.0));
+            }
+        } catch (const GroupThresholdException& e) {
+            std::cerr << e.what() << "\n";
+        }
+
 
         Museum antipaCopy = antipa;
         std::cout << "Copie muzeu creata. Total muzee: " << Museum::getTotalMuseums() << "\n";
