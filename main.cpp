@@ -31,6 +31,13 @@ public:
         return os;
     }
 
+    friend std::istream& operator>>(std::istream& is, Date& dt) {
+        std::cout << "Zi: "; is >> dt.d;
+        std::cout << "Luna: "; is >> dt.m;
+        std::cout << "An: "; is >> dt.y;
+        return is;
+    }
+
     bool operator==(const Date& other) const { return d == other.d && m == other.m && y == other.y; }
 };
 
@@ -67,12 +74,7 @@ public:
         return os;
     }
 
-    friend std::istream& operator>>(std::istream& is, Date& dt) {
-        std::cout << "Zi: "; is >> dt.d;
-        std::cout << "Luna: "; is >> dt.m;
-        std::cout << "An: "; is >> dt.y;
-        return is;
-    }
+
 };
 
 
