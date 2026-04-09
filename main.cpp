@@ -50,8 +50,7 @@ private:
     bool isPriority;
 
 public:
-    Ticket(double price = 0, std::string curr = "RON", bool priority = false)
-        : basePrice(price), currency(curr), isPriority(priority) {}
+    explicit Ticket(double price = 0, std::string curr = "RON", bool priority = false)
 
     double getFinalPrice(int age) const {
         double discount = 0;
@@ -107,8 +106,8 @@ public:
         std::cout << "Email validat pentru " << name << ".\n";
     }
 
-    std::string getName() const { return name; }
-    std::string getEmail() const { return email; }
+    const std::string& getName() const { return name; }
+    const std::string& getEmail() const { return email; }
     void setName(const std::string& newName) { name = newName; }
     void setSurname(const std::string& newSurname) { surname = newSurname; }
     int getAge() const { return age; }
@@ -308,7 +307,7 @@ public:
             itemsCount += count;
     }
 
-    std::string getTitle() const { return title; }
+    const std::string getTitle() const { return title; }
 };
 
 
@@ -435,11 +434,22 @@ public:
         std::cout << "Varsta medie: " << group.calculateAverageAge() << " ani\n";
         std::cout << "Venit total estimat: " << group.calculateTotalRevenue() << " RON\n";
         std::cout << "Grupul este pregatit: " << (group.isReadyForVisit() ? "DA" : "NU") << "\n";
-
         std::cout << "--- Detalii Grup Complete ---\n" << group << std::endl;
+
+        std::cout << "--- Detalii Ghid ---\n";
+        std::cout << "Nume ghid: " << guide.getName() << "\n";
+        std::cout << "Email ghid: " << guide.getEmail() << "\n";
+        std::cout << "p2 este minor: " << (p2.isMinor() ? "DA" : "NU") << "\n";
+        p2.setAge(16);
+        p2.setEmail("maria2@mail.com");
+        p1.setSurname("PopescuNou");
+        std::cout << "Judet: " << loc.getCounty() << "\n";
+        std::cout << "Cod SIRUTA: " << loc.getSirutaCode() << "\n";
+        std::cout << "Taxa extra expozitie: " << ex1.getExtraFee() << "\n";
 
 
         Person p3 = p1;
+        p3.setName("AltNume")
         std::cout << (p1 == p3 ? "Persoane egale\n" : "Persoane diferite\n");
         std::cout << (p1 == p2 ? "Persoane egale\n" : "Persoane diferite\n");
 
