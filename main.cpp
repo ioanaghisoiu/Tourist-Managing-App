@@ -3,7 +3,7 @@
 #include <vector>
 #include <exception>
 #include <algorithm>
-
+#include "Example.h"
 
 class GroupThresholdException : public std::exception {
 public:
@@ -408,6 +408,8 @@ class MuseumApp {
 public:
     static void run() {
         std::cout << "Tourist Managing App\n";
+        Example ex;
+        ex.g();
 
         Location loc("Bucuresti", "Calea Victoriei 12", 179132);
         Museum antipa("Grigore Antipa", 101, loc);
