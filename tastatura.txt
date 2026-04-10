@@ -1,3 +1,12 @@
-2
-Popescu Ana 20 ana@gmail.com 50.0
-Ionescu Dan 17 dan@yahoo.com 50.0
+Istoria Antica
+70.0
+120
+Iasi
+Bulevardul Stefan cel Mare 10
+179300
+20
+8
+2026
+50.0
+EUR
+1

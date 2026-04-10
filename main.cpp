@@ -51,6 +51,7 @@ private:
 
 public:
     explicit Ticket(double price = 0, std::string curr = "RON", bool priority = false)
+    : basePrice(price), currency(std::move(curr)), isPriority(priority) {}
 
     double getFinalPrice(int age) const {
         double discount = 0;
@@ -235,8 +236,8 @@ public:
     }
 
     friend std::istream& operator>>(std::istream& is, Location& loc) {
-        std::cout << "Judet: "; is >> loc.county;
-        std::cout << "Adresa: "; is >> loc.address;
+        std::cout << "Judet: "; is.ignore(); std::getline(is, loc.county);
+        std::cout << "Adresa: "; is.ignore(); std::getline(is, loc.address);
         std::cout << "Cod SIRUTA: "; is >> loc.sirutaCode;
         return is;
     }
@@ -288,7 +289,7 @@ public:
     }
 
     friend std::istream& operator>>(std::istream& is, Exhibition& ex) {
-        std::cout << "Titlu expozitie: "; is >> ex.title;
+        std::cout << "Titlu expozitie: "; is.ignore(); std::getline(is, ex.title);
         std::cout << "Taxa extra: "; is >> ex.extraFee;
         std::cout << "Numar exponate: "; is >> ex.itemsCount;
         return is;
@@ -307,7 +308,7 @@ public:
             itemsCount += count;
     }
 
-    const std::string getTitle() const { return title; }
+    const std::string& getTitle() const { return title; }
 };
 
 
@@ -430,13 +431,13 @@ public:
             std::cerr << e.what() << std::endl;
         }
 
-        std::cout << "Statistici Grup:\n";
+        std::cout << "\n Statistici Grup:\n";
         std::cout << "Varsta medie: " << group.calculateAverageAge() << " ani\n";
         std::cout << "Venit total estimat: " << group.calculateTotalRevenue() << " RON\n";
         std::cout << "Grupul este pregatit: " << (group.isReadyForVisit() ? "DA" : "NU") << "\n";
         std::cout << "--- Detalii Grup Complete ---\n" << group << std::endl;
 
-        std::cout << "--- Detalii Ghid ---\n";
+        std::cout << "\n --- Detalii Ghid ---\n";
         std::cout << "Nume ghid: " << guide.getName() << "\n";
         std::cout << "Email ghid: " << guide.getEmail() << "\n";
         std::cout << "p2 este minor: " << (p2.isMinor() ? "DA" : "NU") << "\n";
@@ -445,11 +446,10 @@ public:
         p1.setSurname("PopescuNou");
         std::cout << "Judet: " << loc.getCounty() << "\n";
         std::cout << "Cod SIRUTA: " << loc.getSirutaCode() << "\n";
-        std::cout << "Taxa extra expozitie: " << ex1.getExtraFee() << "\n";
 
 
         Person p3 = p1;
-        p3.setName("AltNume")
+        p3.setName("AltNume");
         std::cout << (p1 == p3 ? "Persoane egale\n" : "Persoane diferite\n");
         std::cout << (p1 == p2 ? "Persoane egale\n" : "Persoane diferite\n");
 
@@ -482,6 +482,7 @@ public:
         std::cout << "Dupa updatePrice(45): " << ex1 << "\n";
         ex1.setTitle("Arta Contemporana");
         std::cout << "Dupa setTitle: " << ex1 << "\n";
+        std::cout << "Taxa extra expozitie: " << ex1.getExtraFee() << "\n";
 
 
         std::cout << "Muzeul are expozitia 'Lumea Insectelor': "
@@ -509,14 +510,14 @@ public:
         Museum antipaCopy = antipa;
         std::cout << "Copie muzeu creata. Total muzee: " << Museum::getTotalMuseums() << "\n";
 
-        std::cout << "--- Adauga expozitie noua ---\n";
+        std::cout << "\n --- Adauga expozitie noua ---\n";
         Exhibition exNou;
         std::cin >> exNou;
         std::cout << "Expozitie introdusa: " << exNou << "\n";
         antipa.addExhibition(exNou);
         std::cout << "Total exponate acum: " << antipa.getTotalItemsCount() << "\n";
 
-        std::cout << "--- Adauga locatie noua ---\n";
+        std::cout << "\n --- Adauga locatie noua ---\n";
         Location locNou;
         std::cin >> locNou;
         std::cout << "Locatie introdusa: " << locNou << "\n";
@@ -531,7 +532,7 @@ public:
         std::cin >> tNou;
         std::cout << "Bilet introdus: " << tNou << "\n";
 
-        std::cout << "--- Program Finalizat ---" << std::endl;
+        std::cout << "\n --- Program Finalizat ---" << std::endl;
     }
 };
 
