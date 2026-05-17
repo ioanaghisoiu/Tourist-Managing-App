@@ -3,7 +3,7 @@
 
 class Student: public Person {
 private:
-    std:string school;
+    std::string school;
     int studyYear;
 
 protected:
@@ -13,8 +13,8 @@ public:
     Student(const std::string& surname_, const std::string& name_, const std::string& role_, int age_,
             const std::string& email_, const std::string& school_, int studyYear_);
 
-    Person* clone() const override;
+    [[nodiscard]] Person* clone() const override;
 
-    std::string getRole() const override { return "Student"; }
+   [[nodiscard]] std::string getRole() const override { return "Student"; }
 
 };

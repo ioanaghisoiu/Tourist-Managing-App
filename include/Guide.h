@@ -16,11 +16,11 @@ public:
           const std::string& foreignLanguage_, int badgeNumber_);
 
 
-    Person* clone() const override;
+    [[nodiscard]] Person* clone() const override;
 
 
-    std::string getRole() const override { return "Ghid"; }
+    [[nodiscard]] std::string getRole() const override { return "Ghid"; }
 
-    std::string getForeignLanguage() const { return foreignLanguage; }
-    int getBadgeNumber() const { return badgeNumber; }
+    [[nodiscard]] std::string getForeignLanguage() const { return foreignLanguage; }
+    [[nodiscard]] int getBadgeNumber() const { return badgeNumber; }
 };

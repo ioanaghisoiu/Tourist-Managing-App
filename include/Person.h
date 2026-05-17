@@ -16,9 +16,9 @@ public:
     Person(const std::string& name_, const std::string& surname_, int age_,
            const std::string& email_, double tPrice);
 
-    virtual ~Person() = default
+    virtual ~Person() = default;
     virtual Person* clone() const = 0;
-    virtual std::string getRole() const = 0;
+    [[nodiscard]] virtual std::string getRole() const = 0;
 
     void validateEmail() const;
     const std::string& getName() const;
