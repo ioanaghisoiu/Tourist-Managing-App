@@ -1,0 +1,28 @@
+#pragma once
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include "Location.h"
+#include "Exhibition.h"
+
+class Museum {
+private:
+    std::string name;
+    long code;
+    Location location;
+    std::vector<Exhibition> exhibitions;
+    std::vector<int> popularityVotes;
+    static int totalMuseumsCreated;
+public:
+    Museum(std::string name_, long code_, Location loc_);
+    static int getTotalMuseums();
+    void addExhibition(const Exhibition& ex);
+    void addVote(int score);
+    bool hasExhibition(const std::string& searchTitle) const;
+    int totalItems() const;
+    double averageVote() const;
+    long getCode() const;
+    const std::string& getName() const;
+    friend std::ostream& operator<<(std::ostream& os, const Museum& m);
+};
