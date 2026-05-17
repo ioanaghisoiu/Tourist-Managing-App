@@ -4,15 +4,22 @@
 #include "Ticket.h"
 
 class Person {
-private:
+protected:
     std::string name;
     std::string surname;
     int age;
     std::string email;
     Ticket ticket;
+
+    virtual void afisare(std::ostream& os) const;
 public:
     Person(const std::string& name_, const std::string& surname_, int age_,
            const std::string& email_, double tPrice);
+
+    virtual ~Person() = default
+    virtual Person* clone() const = 0;
+    virtual std::string getRole() const = 0;
+
     void validateEmail() const;
     const std::string& getName() const;
     const std::string& getEmail() const;

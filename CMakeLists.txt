@@ -69,6 +69,9 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Museum.cpp
         include/MuseumApp.h
         src/MuseumApp.cpp
+        include/Student.h
+        include/Professor.h
+        include/Guide.h
 )
 target_sources(${MAIN_EXECUTABLE_NAME}
     PRIVATE

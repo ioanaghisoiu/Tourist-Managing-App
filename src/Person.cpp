@@ -31,7 +31,11 @@ bool Person::operator==(const Person& other) const {
 bool Person::operator!=(const Person& other) const { return !(*this == other); }
 bool Person::operator<(const Person& other) const { return age < other.age; }
 
+void Person::afisare(std::ostream& os) const {
+    os << name << " " << surname << " (" << age << " ani, Rol: " << getRole() << ", Bilet: " << ticket << ")";
+}
+
 std::ostream& operator<<(std::ostream& os, const Person& p) {
-    os << p.name << " " << p.surname << " (" << p.age << " ani, Bilet: " << p.ticket << ")";
+    p.afisare(os);
     return os;
 }
