@@ -10,7 +10,7 @@ private:
     Person* guide;
     long museum_code;
     std::string museum_name;
-    bool isEmailDuplicate(const std::string& email) const;
+    [[nodiscard]] bool isEmailDuplicate(const std::string& email) const;
 public:
     Group(const std::string& museum_name_, long museum_code_);
 
@@ -21,10 +21,10 @@ public:
     void setGuide(Person* newGuide);
     void addMember(Person* member);
 
-    double calculateAverageAge() const;
-    bool isReadyForVisit() const;
+    [[nodiscard]]double calculateAverageAge() const;
+    [[nodiscard]] bool isReadyForVisit() const;
 
-    double calculateTotalRevenue() const;
+    [[nodiscard]] double calculateTotalRevenue() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Group& g);
 };

@@ -10,8 +10,8 @@ private:
 public:
     Location(std::string county_, std::string address_, int siruta_);
     Location();
-    const std::string& getCounty() const;
-    int getSirutaCode() const;
+    [[nodiscard]] const std::string& getCounty() const;
+    [[nodiscard]] int getSirutaCode() const;
     void updateAddress(const std::string& newAddress);
     bool operator==(const Location& other) const;
     friend std::ostream& operator<<(std::ostream& os, const Location& loc);

@@ -2,7 +2,8 @@
 #include "Professor.h"
 #include <algorithm>
 
-Group::Group(const std::string& museum_name_, long museum_code_) : guide(nullptr), museum_code(museum_code_) {}
+Group::Group(const std::string& museum_name_, long museum_code_)
+    : guide(nullptr), museum_name(museum_name_), museum_code(museum_code_) {}
 
 Group::~Group() {
     delete guide;
@@ -47,10 +48,9 @@ void Group::addMember(Person* member) {
         throw GroupThresholdException();
     }
     if (isEmailDuplicate(member->getEmail())) {
-        std::cout << "Eroare: Email duplicat: " << member->getEmail() << "\n";
         {
             delete member;
-            return;
+            throw DuplicateEmailException();
         }
     }
     members.push_back(member);
@@ -79,6 +79,8 @@ bool Group::isReadyForVisit() const {
 }
 
 double Group::calculateTotalRevenue() const {
+    if (!isReadyForVisit())
+        throw InvalidGroupStateException();
     double total = 0;
     for (Person* p : members) {
         total += 25.0 * (1.0 - p->getTicketDiscount());

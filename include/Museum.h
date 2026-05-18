@@ -19,10 +19,10 @@ public:
     static int getTotalMuseums();
     void addExhibition(const Exhibition& ex);
     void addVote(int score);
-    bool hasExhibition(const std::string& searchTitle) const;
-    int totalItems() const;
-    double averageVote() const;
-    long getCode() const;
-    const std::string& getName() const;
+    [[nodiscard]] bool hasExhibition(const std::string& searchTitle) const;
+    [[nodiscard]] int totalItems() const;
+    [[nodiscard]] double averageVote() const;
+    [[nodiscard]] long getCode() const;
+    [[nodiscard]] const std::string& getName() const;
     friend std::ostream& operator<<(std::ostream& os, const Museum& m);
 };

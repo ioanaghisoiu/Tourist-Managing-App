@@ -9,9 +9,13 @@ Guide::Guide(const std::string& name_, const std::string& surname_, int age_, co
 Person* Guide::clone() const {
     return new Guide(*this);
 }
+double Guide::getTicketDiscount() const {
+    return 1.0;
+}
 
 void Guide::afisare(std::ostream& os) const {
     os << name << " " << surname << " (" << age << " ani, Rol: " << getRole() 
        << ", Limba: " << foreignLanguage << ", Ecuson: " << badgeNumber 
        << ", Bilet: " << ticket << ")";
 }
+

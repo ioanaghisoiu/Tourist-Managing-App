@@ -17,18 +17,18 @@ public:
            const std::string& email_, double tPrice);
 
     virtual ~Person() = default;
-    virtual Person* clone() const = 0;
+    [[nodiscard]] virtual Person* clone() const = 0;
     [[nodiscard]] virtual std::string getRole() const = 0;
 
     void validateEmail() const;
-    const std::string& getName() const;
-    const std::string& getEmail() const;
-    int getAge() const;
+    [[nodiscard]] const std::string& getName() const;
+    [[nodiscard]]const std::string& getEmail() const;
+    [[nodiscard]] int getAge() const;
     void setName(const std::string& newName);
     void setSurname(const std::string& newSurname);
     void setEmail(const std::string& newEmail);
     void setAge(int newAge);
-    bool isMinor() const;
+    [[nodiscard]] bool isMinor() const;
     bool operator==(const Person& other) const;
     bool operator!=(const Person& other) const;
     bool operator<(const Person& other) const;

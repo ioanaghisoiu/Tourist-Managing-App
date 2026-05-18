@@ -67,8 +67,6 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Group.cpp
         include/Museum.h
         src/Museum.cpp
-        include/MuseumApp.h
-        src/MuseumApp.cpp
         include/Student.h
         include/Professor.h
         include/Guide.h

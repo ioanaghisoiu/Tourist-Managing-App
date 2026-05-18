@@ -5,7 +5,7 @@ const char* GroupThresholdException::what() const noexcept {
 }
 
 const char* DuplicateEmailException::what() const noexcept {
-    return "DuplicateEmailException: Acest email este deja inregistrat în grup. Fiecare membru trebuie sa aiba un email unic.";
+    return "DuplicateEmailException: Acest email este deja inregistrat in grup. Fiecare membru trebuie sa aiba un email unic.";
 }
 
 const char* InvalidGroupStateException::what() const noexcept {

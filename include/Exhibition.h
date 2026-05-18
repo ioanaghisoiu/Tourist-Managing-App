@@ -9,12 +9,12 @@ private:
     int itemsCount;
 public:
     explicit Exhibition(std::string title_ = "Expozitie Generica", double fee_ = 0.0, int items_ = 0);
-    bool isPremiumExhibition() const;
+    [[nodiscard]] bool isPremiumExhibition() const;
     bool operator<(const Exhibition& other) const;
-    int getEstimatedVisitTime() const;
-    double getExtraFee() const;
-    int getItemsCount() const;
-    const std::string& getTitle() const;
+    [[nodiscard]] int getEstimatedVisitTime() const;
+    [[nodiscard]] double getExtraFee() const;
+    [[nodiscard]] int getItemsCount() const;
+    [[nodiscard]] const std::string& getTitle() const;
     void setTitle(const std::string& newTitle);
     void updatePrice(double newFee);
     void addItems(int count);

@@ -23,4 +23,5 @@ public:
 
     [[nodiscard]] std::string getForeignLanguage() const { return foreignLanguage; }
     [[nodiscard]] int getBadgeNumber() const { return badgeNumber; }
+    double getTicketDiscount() const override;
 };
