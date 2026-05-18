@@ -9,9 +9,10 @@ private:
     std::vector<Person*> members;
     Person* guide;
     long museum_code;
+    std::string museum_name;
     bool isEmailDuplicate(const std::string& email) const;
 public:
-    Group(long museum_code_);
+    Group(const std::string& museum_name_, long museum_code_);
 
     ~Group();
     Group(const Group& other);

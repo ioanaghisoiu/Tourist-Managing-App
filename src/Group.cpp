@@ -1,6 +1,8 @@
 #include "Group.h"
+#include "Professor.h"
+#include <algorithm>
 
-Group::Group(long museum_code_) : guide(nullptr), museum_code(museum_code_) {}
+Group::Group(const std::string& museum_name_, long museum_code_) : guide(nullptr), museum_code(museum_code_) {}
 
 Group::~Group() {
     delete guide;
@@ -62,8 +64,18 @@ double Group::calculateAverageAge() const {
 }
 
 bool Group::isReadyForVisit() const {
-    return !members.empty() && members.size() <= 10
+    bool ready = !members.empty() && members.size() <= 10
            && guide->getAge() >= 18 && museum_code != 0;
+    if (ready) {
+        for (Person* p : members) {
+            Professor* prof= dynamic_cast<Professor*>(p);
+            if (prof!=nullptr) {
+                prof->receiveNotification(museum_name, museum_code,
+                    "Grupul dumneavoastra este complet si pregatit pentru vizita!");
+            }
+        }
+    }
+    return ready;
 }
 
 double Group::calculateTotalRevenue() const {
