@@ -33,4 +33,6 @@ public:
     bool operator!=(const Person& other) const;
     bool operator<(const Person& other) const;
     friend std::ostream& operator<<(std::ostream& os, const Person& p);
+
+    [[nodiscard]] virtual double getTicketDiscount() const = 0;
 };

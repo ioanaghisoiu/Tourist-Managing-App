@@ -1,49 +1,90 @@
 #include "Group.h"
 
-Group::Group(const std::vector<Person>& persons_, const Person& guide_, long museum_code_)
-    : persons(persons_), guide(guide_), museum_code(museum_code_) {
-    guide.validateEmail();
+Group::Group(long museum_code_) : guide(nullptr), museum_code(museum_code_) {}
+
+Group::~Group() {
+    delete guide;
+    for (Person* p : members) {
+        delete p;
+    }
+    members.clear();
+}
+
+Group::Group(const Group& other) : museum_code(other.museum_code) {
+    guide = other.guide ? other.guide->clone() : nullptr;
+    for (Person* p : other.members) {
+        members.push_back(p->clone());
+    }
+}
+
+Group& Group::operator=(const Group& other) {
+    if (this != &other) {
+        Group temp(other);
+        std::swap(guide, temp.guide);
+        std::swap(members, temp.members);
+        std::swap(museum_code, temp.museum_code);
+    }
+    return *this;
+}
+
+void Group::setGuide(Person* newGuide) {
+    delete guide;
+    guide = newGuide;
 }
 
 bool Group::isEmailDuplicate(const std::string& email) const {
-    for (const auto& p : persons)
-        if (p.getEmail() == email) return true;
+    for (Person* p : members)
+        if (p->getEmail() == email) return true;
     return false;
 }
 
-void Group::addMember(const Person& member) {
-    if (persons.size() >= 10) throw GroupThresholdException();
-    if (isEmailDuplicate(member.getEmail())) {
-        std::cout << "Eroare: Email duplicat: " << member.getEmail() << "\n";
-        return;
+
+void Group::addMember(Person* member) {
+    if (members.size() >= 10) {
+        delete member;
+        throw GroupThresholdException();
     }
-    persons.push_back(member);
+    if (isEmailDuplicate(member->getEmail())) {
+        std::cout << "Eroare: Email duplicat: " << member->getEmail() << "\n";
+        {
+            delete member;
+            return;
+        }
+    }
+    members.push_back(member);
 }
 
 double Group::calculateAverageAge() const {
-    if (persons.empty()) return 0.0;
+    if (members.empty()) return 0.0;
     double sum = 0;
-    for (const auto& p : persons) sum += p.getAge();
-    return sum / (double)persons.size();
+    for (const auto& p : members) sum += p->getAge();
+    return sum / (double)members.size();
 }
 
 bool Group::isReadyForVisit() const {
-    return !persons.empty() && persons.size() <= 10
-           && guide.getAge() >= 18 && museum_code != 0;
+    return !members.empty() && members.size() <= 10
+           && guide->getAge() >= 18 && museum_code != 0;
 }
 
 double Group::calculateTotalRevenue() const {
     double total = 0;
-    for (const auto& p : persons) {
-        if (p.getAge() < 18) total += 10.0;
-        else if (p.getAge() > 65) total += 15.0;
-        else total += 25.0;
+    for (Person* p : members) {
+        total += 25.0 * (1.0 - p->getTicketDiscount());
     }
     return total;
 }
 
 std::ostream& operator<<(std::ostream& os, const Group& g) {
-    os << "Grup Muzeu [" << g.museum_code << "]\nGhid: " << g.guide << "\nMembri:\n";
-    for (const auto& p : g.persons) os << " - " << p << "\n";
+    os << "Grup Muzeu [" << g.museum_code << "]\n";
+    if (g.guide) {
+        os << "Ghid: " << *(g.guide) << "\n";
+    }
+    else {
+        os << "Ghid: nespecificat\n";
+    }
+    os << "Membri:\n";
+    for (Person* p : g.members)
+        os << " - " << *p << "\n";
+
     return os;
 }

@@ -6,15 +6,24 @@
 
 class Group {
 private:
-    std::vector<Person> persons;
-    Person guide;
+    std::vector<Person*> members;
+    Person* guide;
     long museum_code;
     bool isEmailDuplicate(const std::string& email) const;
 public:
-    Group(const std::vector<Person>& persons_, const Person& guide_, long museum_code_);
-    void addMember(const Person& member);
+    Group(long museum_code_);
+
+    ~Group();
+    Group(const Group& other);
+    Group& operator=(const Group& other);
+
+    void setGuide(Person* newGuide);
+    void addMember(Person* member);
+
     double calculateAverageAge() const;
     bool isReadyForVisit() const;
+
     double calculateTotalRevenue() const;
+
     friend std::ostream& operator<<(std::ostream& os, const Group& g);
 };

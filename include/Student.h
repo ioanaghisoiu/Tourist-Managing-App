@@ -16,5 +16,6 @@ public:
     [[nodiscard]] Person* clone() const override;
 
    [[nodiscard]] std::string getRole() const override { return "Student"; }
+    [[nodiscard]] double getTicketDiscount() const override { return 0.5; }
 
 };
