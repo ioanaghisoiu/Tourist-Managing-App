@@ -12,7 +12,7 @@ protected:
 
 public:
 
-    Guide(const std::string& name_, const std::string& surname_, int age_, const std::string& email_, double tPrice,
+    Guide(const std::string& name_, const std::string& surname_, int age_, const std::string& email_, Ticket* ticket_,
           const std::string& foreignLanguage_, int badgeNumber_);
 
 

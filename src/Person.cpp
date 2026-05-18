@@ -1,8 +1,40 @@
 #include "Person.h"
 
 Person::Person(const std::string& name_, const std::string& surname_, int age_,
-               const std::string& email_, double tPrice)
-    : name(name_), surname(surname_), age(age_), email(email_), ticket(tPrice) {}
+               const std::string& email_,Ticket* ticket_)
+    : name(name_), surname(surname_), age(age_), email(email_), ticket(ticket_) {}
+
+
+Person::~Person() {
+    delete ticket;
+}
+
+Person::Person(const Person& other)
+    : name(other.name), surname(other.surname), age(other.age), email(other.email) {
+    ticket = (other.ticket != nullptr) ? other.ticket->clone() : nullptr;
+}
+
+
+Person& Person::operator=(const Person& other) {
+    if (this != &other) {
+        name = other.name;
+        surname = other.surname;
+        age = other.age;
+        email = other.email;
+
+        delete ticket;
+        ticket = (other.ticket != nullptr) ? other.ticket->clone() : nullptr;
+    }
+    return *this;
+}
+
+void Person::afisareBilete(std::ostream& os) const {
+    if (ticket != nullptr) {
+        os << ", Bilet: [" << *ticket << "]";
+    } else {
+        os << ", [Fara bilet]";
+    }
+}
 
 void Person::validateEmail() const {
     size_t atPos = email.find('@');
@@ -35,7 +67,9 @@ void Person::afisare(std::ostream& os) const {
     os << name << " " << surname << " (" << age << " ani, Rol: " << getRole() << ", Bilet: " << ticket << ")";
 }
 
-std::ostream& operator<<(std::ostream& os, const Person& p) {
-    p.afisare(os);
-    return os;
-}
+    std::ostream& operator<<(std::ostream& os, const Person& p) {
+        p.afisare(os);       // Scrie numele și rolul
+        p.afisareBilete(os); // Scrie biletul imediat după
+        return os;
+    }
+

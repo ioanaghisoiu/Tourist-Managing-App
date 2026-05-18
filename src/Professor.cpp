@@ -1,9 +1,9 @@
 #include "Professor.h"
 
-Professor::Professor(const std::string& name_, const std::string& surname_, int age_, const std::string& email_, double tPrice,
+Professor::Professor(const std::string& name_, const std::string& surname_, int age_,
+                     const std::string& email_, Ticket* ticket_,
                      int experience_, const std::string& school_)
-    : Person(name_, surname_, age_, email_, tPrice),
-      experience(experience_), school(school_) {}
+    : Person(name_, surname_, age_, email_, ticket_), experience(experience_), school(school_) {}
 
 Person* Professor::clone() const {
     return new Professor(*this);

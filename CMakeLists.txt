@@ -73,6 +73,10 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Guide.cpp
         src/Professor.cpp
         src/Student.cpp
+        include/VipTicket.h
+        src/VipTicket.cpp
+        include/DiscountTicket.h
+        src/DiscountTicket.cpp
 )
 target_sources(${MAIN_EXECUTABLE_NAME}
     PRIVATE

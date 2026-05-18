@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <iostream>
 #include "Ticket.h"
 
 class Person {
@@ -9,14 +10,18 @@ protected:
     std::string surname;
     int age;
     std::string email;
-    Ticket ticket;
+    Ticket* ticket;
 
     virtual void afisare(std::ostream& os) const;
+    virtual void afisareBilete(std::ostream& os) const;
 public:
     Person(const std::string& name_, const std::string& surname_, int age_,
-           const std::string& email_, double tPrice);
+           const std::string& email_, Ticket* ticket_);
 
-    virtual ~Person() = default;
+    virtual ~Person();
+    Person(const Person& other);
+    Person& operator=(const Person& other);
+
     [[nodiscard]] virtual Person* clone() const = 0;
     [[nodiscard]] virtual std::string getRole() const = 0;
 
@@ -35,4 +40,6 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Person& p);
 
     [[nodiscard]] virtual double getTicketDiscount() const = 0;
+
+
 };

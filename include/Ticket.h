@@ -1,16 +1,25 @@
 #pragma once
-#include <iostream>
 #include <string>
- 
+#include <iostream>
+
 class Ticket {
-private:
+protected:
     double basePrice;
     std::string currency;
     bool isPriority;
+
 public:
     explicit Ticket(double price = 0, std::string curr = "RON", bool priority = false);
-    [[nodiscard]] double getFinalPrice(int age) const;
-    friend std::ostream& operator<<(std::ostream& os, const Ticket& t);
-    friend std::istream& operator>>(std::istream& is, Ticket& t);
+
+    virtual ~Ticket() = default;
+
+    virtual double getFinalPrice(int age) const;
+    virtual Ticket* clone() const;
+
+    friend std::ostream& operator<<(std::ostream& os, const Ticket& t) {
+        t.print(os);
+        return os;
+    }
+protected:
+    virtual void print(std::ostream& os) const;
 };
- 

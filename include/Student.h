@@ -11,7 +11,7 @@ protected:
 
 public:
     Student(const std::string& surname_, const std::string& name_, int age_,
-            const std::string& email_,double tPrice, const std::string& school_, int studyYear_);
+            const std::string& email_,Ticket* ticket_, const std::string& school_, int studyYear_);
 
     [[nodiscard]] Person* clone() const override;
 
