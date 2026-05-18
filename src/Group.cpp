@@ -62,6 +62,17 @@ double Group::calculateAverageAge() const {
     for (const auto& p : members) sum += p->getAge();
     return sum / (double)members.size();
 }
+void Group::sortMembersByAge() {
+    std::sort(members.begin(), members.end(), [](Person* a, Person* b) {
+        return a->getAge() < b->getAge();
+    });
+}
+
+int Group::countMinors() const {
+    return std::count_if(members.begin(), members.end(), [](Person* p) {
+        return p->isMinor();
+    });
+}
 
 bool Group::isReadyForVisit() const {
     bool ready = !members.empty() && members.size() <= 10

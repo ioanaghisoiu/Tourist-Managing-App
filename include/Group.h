@@ -26,5 +26,8 @@ public:
 
     [[nodiscard]] double calculateTotalRevenue() const;
 
+    void sortMembersByAge();
+    int countMinors() const;
+
     friend std::ostream& operator<<(std::ostream& os, const Group& g);
 };
