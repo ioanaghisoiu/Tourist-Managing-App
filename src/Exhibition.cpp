@@ -30,9 +30,17 @@ std::ostream& operator<<(std::ostream& os, const Exhibition& ex) {
     return os;
 }
 
+
 std::istream& operator>>(std::istream& is, Exhibition& ex) {
     std::cout << "Titlu expozitie: "; is.ignore(); std::getline(is, ex.title);
     std::cout << "Taxa extra: "; is >> ex.extraFee;
     std::cout << "Numar exponate: "; is >> ex.itemsCount;
     return is;
+}
+
+Exhibition& Exhibition::operator+=(int newItems) {
+    if (newItems > 0) {
+        itemsCount += newItems;
+    }
+    return *this;
 }

@@ -15,9 +15,13 @@ public:
     [[nodiscard]] double getExtraFee() const;
     [[nodiscard]] int getItemsCount() const;
     [[nodiscard]] const std::string& getTitle() const;
+
     void setTitle(const std::string& newTitle);
     void updatePrice(double newFee);
     void addItems(int count);
+
+    Exhibition& operator+=(int newItems);
+
     friend std::ostream& operator<<(std::ostream& os, const Exhibition& ex);
     friend std::istream& operator>>(std::istream& is, Exhibition& ex);
 };

@@ -15,3 +15,8 @@ class InvalidGroupStateException : public std::exception {
 public:
      [[nodiscard]]const char* what() const noexcept override;
 };
+
+class WrongMuseumException : public std::exception {
+public:
+     const char* what() const noexcept override;
+};

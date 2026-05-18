@@ -29,5 +29,7 @@ public:
     void sortMembersByAge();
     int countMinors() const;
 
+    long getMuseumCode() const { return museum_code; }
+
     friend std::ostream& operator<<(std::ostream& os, const Group& g);
 };
