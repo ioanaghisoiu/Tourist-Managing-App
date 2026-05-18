@@ -10,8 +10,8 @@ protected:
     void afisare(std::ostream& os) const override;
 
 public:
-    Professor(const std::string& surname_, const std::string& name_, const std::string& role_, int age_,
-              const std::string& email_, int experience_, const std::string& school_);
+    Professor(const std::string& surname_, const std::string& name_, int age_,
+              const std::string& email_,double tPrice, int experience_, const std::string& school_);
 
     [[nodiscard]] Person* clone() const override;
     [[nodiscard]] std::string getRole() const override { return "Profesor"; }

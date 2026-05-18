@@ -72,6 +72,9 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         include/Student.h
         include/Professor.h
         include/Guide.h
+        src/Guide.cpp
+        src/Professor.cpp
+        src/Student.cpp
 )
 target_sources(${MAIN_EXECUTABLE_NAME}
     PRIVATE
