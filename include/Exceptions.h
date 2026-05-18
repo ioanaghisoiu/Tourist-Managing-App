@@ -5,3 +5,13 @@ class GroupThresholdException : public std::exception {
 public:
     const char* what() const noexcept override;
 };
+
+class DuplicateEmailException : public std::exception {
+public:
+    const char* what() const noexcept override;
+};
+
+class InvalidGroupStateException : public std::exception {
+public:
+    const char* what() const noexcept override;
+};
