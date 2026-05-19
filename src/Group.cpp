@@ -5,8 +5,8 @@
 #include "Student.h"
 #include "Professor.h"
 
-Group::Group(const std::string& museum_name_, long museum_code_)
-    : guide(nullptr), museum_name(museum_name_), museum_code(museum_code_) {}
+Group::Group(const std::string& museum_name_, long museum_code_, const Date& data_)
+    : guide(nullptr), museum_code(museum_code_), museum_name(museum_name_), dataVizitei(data_) {}
 
 Group::~Group() {
     delete guide;
@@ -16,7 +16,7 @@ Group::~Group() {
     members.clear();
 }
 
-Group::Group(const Group& other) : museum_code(other.museum_code) {
+Group::Group(const Group& other) : museum_code(other.museum_code), museum_name(other.museum_name), dataVizitei(other.dataVizitei){
     guide = other.guide ? other.guide->clone() : nullptr;
     for (Person* p : other.members) {
         members.push_back(p->clone());

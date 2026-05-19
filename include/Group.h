@@ -3,6 +3,7 @@
 #include <vector>
 #include "Person.h"
 #include "Exceptions.h"
+#include "Date.h"
 
 class Group {
 private:
@@ -11,8 +12,10 @@ private:
     long museum_code;
     std::string museum_name;
     [[nodiscard]] bool isEmailDuplicate(const std::string& email) const;
+    Date dataVizitei;
+
 public:
-    Group(const std::string& museum_name_, long museum_code_);
+    Group(const std::string& museum_name_, long museum_code_,const Date& data_);
 
     ~Group();
     Group(const Group& other);
@@ -30,6 +33,8 @@ public:
     int countMinors() const;
 
     long getMuseumCode() const { return museum_code; }
+
+    [[nodiscard]] const Date& getDataVizitei() const { return dataVizitei; }
 
     friend std::ostream& operator<<(std::ostream& os, const Group& g);
 };
