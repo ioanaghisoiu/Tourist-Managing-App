@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <sstream>
 #include "Student.h"
+#include "Exceptions.h"
 #include "Professor.h"
 
 Group::Group(const std::string& museum_name_, long museum_code_, const Date& data_)
@@ -157,4 +158,26 @@ std::ostream& operator<<(std::ostream& os, const Group& g) {
         os << " - " << *p << "\n";
 
     return os;
+}
+
+void Group::removeMember(const std::string& emailStergere) {
+
+    Date azi = Date::getToday();
+    if (!(azi < dataVizitei)) {
+        throw std::runtime_error("Politica anulare: Puteti anula doar cu cel putin o zi inainte de data vizitei!");
+    }
+
+
+    auto it = members.begin();
+    while (it != members.end()) {
+        if ((*it)->getEmail() == emailStergere) {
+            delete *it;
+            members.erase(it);
+            return;
+        }
+        ++it;
+    }
+
+
+    throw PersonNotExistsException();
 }

@@ -36,5 +36,7 @@ public:
 
     [[nodiscard]] const Date& getDataVizitei() const { return dataVizitei; }
 
+    void removeMember(const std::string& emailStergere);
+
     friend std::ostream& operator<<(std::ostream& os, const Group& g);
 };

@@ -82,6 +82,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/TemporaryExhibition.cpp
         include/InteractiveExhibition.h
         src/InteractiveExhibition.cpp
+        include/Cerere.h
+        src/Cerere.cpp
 )
 target_sources(${MAIN_EXECUTABLE_NAME}
     PRIVATE

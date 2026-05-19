@@ -11,4 +11,7 @@ public:
     bool operator==(const Date& other) const;
     friend std::ostream& operator<<(std::ostream& os, const Date& dt);
     friend std::istream& operator>>(std::istream& is, Date& dt);
+
+    bool operator<(const Date& other) const;
+    static Date getToday();
 };

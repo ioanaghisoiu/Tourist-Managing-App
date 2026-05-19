@@ -15,3 +15,4 @@ const char* InvalidGroupStateException::what() const noexcept {
 const char* WrongMuseumException::what() const noexcept {
     return "WrongMuseumException: Grupul are bilet pentru alt muzeu! Acces interzis.";
 }
+

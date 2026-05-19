@@ -1,5 +1,5 @@
 #include "Date.h"
-
+#include <chrono>
 Date::Date(int d, int m, int y)
     : ymd(std::chrono::year{y} / std::chrono::month{static_cast<unsigned>(m)}
           / std::chrono::day{static_cast<unsigned>(d)}) {}
@@ -13,6 +13,8 @@ std::ostream& operator<<(std::ostream& os, const Date& dt) {
        << static_cast<unsigned>(dt.ymd.month()) << "/"
        << static_cast<int>(dt.ymd.year());
     return os;
+
+
 }
 
 std::istream& operator>>(std::istream& is, Date& dt) {
@@ -22,4 +24,18 @@ std::istream& operator>>(std::istream& is, Date& dt) {
     std::cout << "An: "; is >> y;
     dt = Date(d, m, y);
     return is;
+}
+
+bool Date::operator<(const Date& other) const {
+    return ymd < other.ymd;
+}
+
+Date Date::getToday() {
+    auto acum = std::chrono::system_clock::now();
+    auto zile = std::chrono::floor<std::chrono::days>(acum);
+    std::chrono::year_month_day dataCurenta(zile);
+
+    return Date(static_cast<unsigned>(dataCurenta.day()),
+                static_cast<unsigned>(dataCurenta.month()),
+                static_cast<int>(dataCurenta.year()));
 }
