@@ -39,4 +39,8 @@ public:
     void removeMember(const std::string& emailStergere);
 
     friend std::ostream& operator<<(std::ostream& os, const Group& g);
+
+    bool areMembru(const std::string& emailCautat) const;
+
+    void setDataVizitei(const Date& nouaData);
 };

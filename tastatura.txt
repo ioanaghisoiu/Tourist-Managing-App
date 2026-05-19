@@ -1,12 +1,25 @@
-Istoria Antica
-70.0
-120
-Iasi
-Bulevardul Stefan cel Mare 10
-179300
-20
-8
-2026
-50.0
-EUR
-1
+utilizator:
+Nume:Popescu
+Prenume:Gabriel
+Parola:Popescu.Gabriel
+Varsta:35
+An exp.: 10
+Scoala: Colegiul National Micea Cel Batran
+DATA
+zi:15
+luna:06
+an:2026
+ghid:da
+nr studenti:2
+Ionescu
+Elena
+17
+elena.ionescu@yahoo.com
+Colegiul National Micea Cel Batran
+11
+Radu
+Mihai
+18
+mihai.radu@yahoo.com
+Colegiul National Micea Cel Batran
+12

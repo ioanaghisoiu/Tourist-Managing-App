@@ -181,3 +181,14 @@ void Group::removeMember(const std::string& emailStergere) {
 
     throw PersonNotExistsException();
 }
+
+bool Group::areMembru(const std::string& emailCautat) const {
+    for (Person* p : members) {
+        if (p->getEmail() == emailCautat) return true;
+    }
+    return false;
+}
+
+void Group::setDataVizitei(const Date& nouaData) {
+    dataVizitei = nouaData;
+}
