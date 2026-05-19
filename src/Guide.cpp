@@ -15,7 +15,6 @@ double Guide::getTicketDiscount() const {
 
 void Guide::afisare(std::ostream& os) const {
     os << name << " " << surname << " (" << age << " ani, Rol: " << getRole() 
-       << ", Limba: " << foreignLanguage << ", Ecuson: " << badgeNumber 
-       << ", Bilet: " << ticket << ")";
+       << ", Limba: " << foreignLanguage << ", Ecuson: " << badgeNumber <<")";
 }
 

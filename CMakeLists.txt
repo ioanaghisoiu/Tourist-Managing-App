@@ -77,6 +77,11 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/VipTicket.cpp
         include/DiscountTicket.h
         src/DiscountTicket.cpp
+        include/IInteractive.h
+        include/TemporaryExhibition.h
+        src/TemporaryExhibition.cpp
+        include/InteractiveExhibition.h
+        src/InteractiveExhibition.cpp
 )
 target_sources(${MAIN_EXECUTABLE_NAME}
     PRIVATE

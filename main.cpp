@@ -11,7 +11,8 @@
 #include "Ticket.h"
 #include "VipTicket.h"
 #include "DiscountTicket.h"
-
+#include "TemporaryExhibition.h"
+#include "InteractiveExhibition.h"
 int main() {
     std::cout << "--- Tourist Managing App ---\n\n";
 
@@ -46,7 +47,7 @@ int main() {
 
 
     grup.setGuide(new Guide("Elena", "Ghidul", 28, "elena@muzeu.ro", new Ticket(30.0, "RON", false), "Engleza", 999));
-    std::cout << "Ghid setat.\n";
+    std::cout << "Ghid setat.\n\n";
 
     if (grup.isReadyForVisit()) {
         std::cout << "\n--- NOTIFICARI SISTEM ---\n";
@@ -59,14 +60,26 @@ int main() {
     Ticket* biletRedus = new DiscountTicket(50.0, "RON", 0.3);
     Ticket* biletNormal = new Ticket(50.0, "RON", false);
 
-    Student s1("Ion", "Popescu", 20, "ion@email.com", biletRedus, "UPB", 9);
-    Professor p1("Maria", "Ionescu", 45, "maria@email.com", biletVip, 10, "Mate");
+    Student s1("Ion", "Popescu", 16, "ion@email.com", biletRedus, "Liceu Ion Creanga", 9);
+    Professor p1("Maria", "Ionescu", 45, "maria@email.com", biletVip, 10, "Liceu Ion Creanga");
     Guide g1("Alex", "Vasile", 30, "alex@email.com", biletNormal, "Engleza", 5);
 
 
     std::cout << s1 << "\n";
     std::cout << p1 << "\n";
     std::cout << g1 << "\n";
+
+
+
+    TemporaryExhibition fluturi("Fluturi Exotici", 10.0, 50, 5);
+    std::cout << fluturi << "\n";
+
+
+    InteractiveExhibition vr("Explorare Subacvatica VR", 30.0, 15, "Casti Oculus");
+    std::cout << vr << "\n";
+
+
+    vr.interact();
 
     std::cout << "\n--- Program Finalizat cu Succes ---\n";
     return 0;

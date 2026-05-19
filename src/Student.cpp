@@ -11,6 +11,5 @@ Person* Student::clone() const {
 
 void Student::afisare(std::ostream& os) const {
     os << name << " " << surname << " (" << age << " ani, Rol: " << getRole()
-       << ", Scoala: " << school << ", An: " << studyYear
-       << ", Bilet: " << ticket << ")";
+       << ", Scoala: " << school << ", An: " << studyYear<<")";
 }

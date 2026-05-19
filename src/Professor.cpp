@@ -11,8 +11,7 @@ Person* Professor::clone() const {
 
 void Professor::afisare(std::ostream& os) const {
     os << name << " " << surname << " (" << age << " ani, Rol: " << getRole()
-       << ", Experienta: " << experience << " ani, Scoala: " << school
-       << ", Bilet: " << ticket << ")";
+       << ", Experienta: " << experience << " ani, Scoala: " << school<< ")";
 }
 
 void Professor::receiveNotification(const std::string& museumName, long museumCode, const std::string& message) const {

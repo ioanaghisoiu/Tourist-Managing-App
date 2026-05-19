@@ -68,8 +68,14 @@ void Person::afisare(std::ostream& os) const {
 }
 
     std::ostream& operator<<(std::ostream& os, const Person& p) {
-        p.afisare(os);       // Scrie numele și rolul
-        p.afisareBilete(os); // Scrie biletul imediat după
+        p.afisare(os);
+        p.afisareBilete(os);
         return os;
     }
+double Person::getTicketFinalPrice() const {
+    if (ticket != nullptr) {
+        return ticket->getFinalPrice(age);
+    }
+    return 0.0;
+}
 

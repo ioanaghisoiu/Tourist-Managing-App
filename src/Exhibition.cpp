@@ -26,7 +26,7 @@ void Exhibition::addItems(int count) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Exhibition& ex) {
-    os << "  - " << ex.title << " (" << ex.itemsCount << " exponate) | Taxa: " << ex.extraFee << " RON";
+    ex.print(os);
     return os;
 }
 
@@ -36,6 +36,10 @@ std::istream& operator>>(std::istream& is, Exhibition& ex) {
     std::cout << "Taxa extra: "; is >> ex.extraFee;
     std::cout << "Numar exponate: "; is >> ex.itemsCount;
     return is;
+}
+
+void Exhibition::print(std::ostream& os) const {
+    os << "Expozitie: " << title << " | Taxa: " << extraFee << " RON | Obiecte: " << itemsCount;
 }
 
 Exhibition& Exhibition::operator+=(int newItems) {

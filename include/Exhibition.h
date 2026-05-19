@@ -3,12 +3,13 @@
 #include <string>
 
 class Exhibition {
-private:
+protected:
     std::string title;
     double extraFee;
     int itemsCount;
 public:
     explicit Exhibition(std::string title_ = "Expozitie Generica", double fee_ = 0.0, int items_ = 0);
+
     [[nodiscard]] bool isPremiumExhibition() const;
     bool operator<(const Exhibition& other) const;
     [[nodiscard]] int getEstimatedVisitTime() const;
@@ -24,4 +25,9 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, const Exhibition& ex);
     friend std::istream& operator>>(std::istream& is, Exhibition& ex);
+
+    virtual ~Exhibition() = default;
+
+    virtual void print(std::ostream& os) const;
+
 };

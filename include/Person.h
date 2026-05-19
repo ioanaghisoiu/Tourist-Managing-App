@@ -41,5 +41,5 @@ public:
 
     [[nodiscard]] virtual double getTicketDiscount() const = 0;
 
-
+    double getTicketFinalPrice() const;
 };
