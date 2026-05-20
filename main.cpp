@@ -15,6 +15,7 @@
 #include "InteractiveExhibition.h"
 #include "Date.h"
 #include "Cerere.h"
+#include <fstream>
 
 class MesajNotificare {
 public:
@@ -37,8 +38,9 @@ void afiseazaMeniuAdministrator() {
     std::cout << "\n=== MENIU ADMINISTRATOR ===\n";
     std::cout << "1. Vizualizeaza cererile trimise de profesori \n";
     std::cout << "2. Aproba si executa urmatoarea cerere din lista \n";
-    std::cout << "3. Afiseaza toate grupurile aprobate din sistem \n";
+    std::cout << "3. Afiseaza toate grupurile aprobate din sistem dupa data \n";
     std::cout << "4. Administrare: Deblocheaza echipamentele interactive VR\n";
+    std::cout << "5. Raport vizite\n";
     std::cout << "0. Iesire din cont \n";
     std::cout << "Alege o optiune: ";
 }
@@ -102,7 +104,7 @@ int main() {
                         } else {
                             for (const auto& c : cereriInAsteptare) {
                                 std::cout << " ID Cerere: [" << c.getId() << "] | Tip: " << c.getTip() << "\n";
-                                std::cout << " Descriere: " << c.getDescriere() << "\n-------------------------------------\n";
+                                std::cout << " Descriere: " << c.getDescriere() << "\n";
                             }
                         }
                         break;
@@ -191,6 +193,44 @@ int main() {
                     case 4:
                         vr.interact();
                         break;
+                    case 5: {
+                        std::cout << "\n--- EXPORT RAPORT VIZITE IN FISIER ---\n";
+                        if (toateGrupurileAprobate.empty()) {
+                            std::cout << "Nu exista grupuri aprobate in acest moment pentru a genera un raport.\n";
+                            break;
+                        }
+
+                        std::ofstream fout("raport_vizite.txt");
+                        if (!fout.is_open()) {
+                            std::cout << "[EROARE] Nu s-a putut crea fisierul raport_vizite.txt!\n";
+                            break;
+                        }
+
+                        fout << "        RAPORT MANAGER - VIZITE MUZEE APROBATE     \n";
+                        fout << "Total grupuri programate in sistem: " << toateGrupurileAprobate.size() << "\n\n";
+
+                        double profitTotalEstimativ = 0.0;
+
+                        for (size_t i = 0; i < toateGrupurileAprobate.size(); ++i) {
+                            Group* g = toateGrupurileAprobate[i];
+                            fout << "Grupul #" << (i + 1) << ":\n";
+                            fout << "  - Cod Muzeu Vizitat: " << g->getMuseumCode() << "\n";
+                            fout << "  - Data programata: " << g->getDataVizitei() << "\n";
+
+                            try {
+                                double venitGrup = g->calculateTotalRevenue();
+                                profitTotalEstimativ += venitGrup;
+                                fout << "  - Venit estimat grup: " << venitGrup << " RON\n";
+                            } catch (...) {
+                                fout << "  - Venit estimat grup: EROARE CALCUL (Grup invalid)\n";
+                            }
+
+                        }
+                        fout << " TOTAL VENITURI PROIECTATE: " << profitTotalEstimativ << " RON\n";
+                        fout.close();
+                        std::cout << "Raportul a fost exportat cu succes in fisierul 'raport_vizite.txt'!\n";
+                        break;
+                    }
                 }
             }
         }
