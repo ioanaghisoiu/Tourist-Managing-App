@@ -64,8 +64,11 @@ int main() {
     std::cout << "Data curenta a sistemului: " << Date::getToday() << "\n\n";
 
     std::string rolCurent = "";
-    while (rolCurent != "iesire") {
+    while (true) {
         std::cout << "Sunteti administrator sau utilizator? (Scrieti exact rolul sau 'iesire'): ";
+
+        if (!std::getline(std::cin, rolCurent)) break;
+
         std::getline(std::cin, rolCurent);
 
         if (rolCurent == "iesire") break;
