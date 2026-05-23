@@ -40,9 +40,7 @@ void afiseazaMeniuAdministrator() {
     std::cout << "1. Vizualizeaza cererile trimise de profesori \n";
     std::cout << "2. Aproba si executa urmatoarea cerere din lista \n";
     std::cout << "3. Afiseaza toate grupurile aprobate din sistem dupa data \n";
-    std::cout << "4. Administrare: Deblocheaza echipamentele interactive VR\n";
-    std::cout << "5. Raport vizite in fisier\n";
-    std::cout << "6. Administrare detalii si statistici Muzeu\n";
+    std::cout << "4. Raport vizite in fisier\n";
     std::cout << "0. Iesire din cont \n";
     std::cout << "Alege o optiune: ";
 }
@@ -59,16 +57,6 @@ int main() {
     std::vector<Professor*> conturiProfesori;
     std::vector<MesajNotificare> cutiePostalaNotificari;
     int urmatorulIdCerere = 1;
-
-    Date dataViitoare(25, 12, 2026);
-    Group* grupPrepopulat = new Group("Muzeul Grigore Antipa", 101, dataViitoare);
-    Professor* profPrepopulat = new Professor("Dan", "Ionescu", 45, "dan.ionescu@scoala.ro", new Ticket(30.0, "RON", false), 15, "Liceul Tudor Vianu");
-
-    grupPrepopulat->addMember(profPrepopulat->clone());
-    grupPrepopulat->addMember(new Student("Andrei", "Popescu", 16, "andrei@elev.ro", new DiscountTicket(30.0, "RON", 0.5), "Liceul Tudor Vianu", 10));
-
-    toateGrupurileAprobate.push_back(grupPrepopulat);
-    conturiProfesori.push_back(profPrepopulat);
 
     std::cout << "TOURIST MANAGING APP ACTIVATA\n";
     std::cout << "Data curenta a sistemului: " << Date::getToday() << "\n\n";
@@ -120,43 +108,52 @@ int main() {
                         Cerere c = cereriInAsteptare.front();
                         cereriInAsteptare.erase(cereriInAsteptare.begin());
 
+
                         std::string emailProfAsociat = "";
-                        if (c.getGrupAsociat() && c.getDescriere().find("[REF:") != std::string::npos) {
-                            emailProfAsociat = c.getDescriere().substr(c.getDescriere().find("[REF:") + 5);
-                            emailProfAsociat.erase(emailProfAsociat.find("]"));
+                        if (c.getGrupAsociat()) {
+                            for (Professor* p : conturiProfesori) {
+                                if (c.getGrupAsociat()->areMembru(p->getEmail())) {
+                                    emailProfAsociat = p->getEmail();
+                                    break;
+                                }
+                            }
                         }
 
                         if (c.getTip() == "PROGRAMARE") {
                             if (c.getDescriere().find("Ghid solicitat: DA") != std::string::npos) {
                                 c.getGrupAsociat()->setGuide(new Guide("Elena", "Ghidul", 28, "elena@muzeu.ro", new Ticket(30.0, "RON", false), "Engleza", 999));
-                                std::cout << "[ADMIN] Cererea ID " << c.getId() << " a fost aprobata cu GHID alocat!\n";
+                                std::cout << "[ADMIN] Cererea a fost aprobata cu GHID alocat!\n";
                             } else {
                                 c.getGrupAsociat()->setGuide(nullptr);
-                                std::cout << "[ADMIN] Cererea ID " << c.getId() << " a fost aprobata ca TUR LIBER (fara ghid)!\n";
+                                std::cout << "[ADMIN] Cererea a fost aprobata ca TUR LIBER!\n";
                             }
+
+                            if (c.getGrupAsociat()->hasVR()) {
+                                std::cout << "[ADMIN] Sistemul deblocheaza echipamentele VR pentru acest grup...\n";
+                                vr.interact();
+                            }
+
                             toateGrupurileAprobate.push_back(c.getGrupAsociat());
-
                             try { antipa.hostGroupVisit(*(c.getGrupAsociat())); } catch (...) {}
-
                             (void)c.getGrupAsociat()->isReadyForVisit();
 
                             MesajNotificare notif;
                             notif.emailProfesor = emailProfAsociat;
-                            notif.textMesaj = "Cererea dumneavoastra de programare a fost aprobata de Administrator!";
+                            notif.textMesaj = "Cererea de programare a fost aprobata!";
                             cutiePostalaNotificari.push_back(notif);
                         }
                         else if (c.getTip() == "ANULARE_STUDENT") {
                             try {
                                 c.getGrupAsociat()->removeMember(c.getEmailTinta());
-                                std::cout << "[ADMIN] Studentul cu email-ul " << c.getEmailTinta() << " a fost eliminat.\n";
+                                std::cout << "[ADMIN] Studentul a fost eliminat.\n";
                                 double totalNou = c.getGrupAsociat()->calculateTotalRevenue();
 
                                 MesajNotificare notif;
                                 notif.emailProfesor = emailProfAsociat;
-                                notif.textMesaj = "Studentul (" + c.getEmailTinta() + ") a fost sters. Noul total de plata al grupului este: " + std::to_string(totalNou) + " RON.";
+                                notif.textMesaj = "Student sters. Nou total: " + std::to_string(totalNou) + " RON.";
                                 cutiePostalaNotificari.push_back(notif);
                             } catch (const std::exception& e) {
-                                std::cout << "[EROARE LA EXECUTIE] " << e.what() << "\n";
+                                std::cout << "[EROARE] " << e.what() << "\n";
                             }
                         }
                         else if (c.getTip() == "ANULARE_GRUP") {
@@ -165,7 +162,7 @@ int main() {
                                 if (*it == c.getGrupAsociat()) {
                                     MesajNotificare notif;
                                     notif.emailProfesor = emailProfAsociat;
-                                    notif.textMesaj = "Notificare: Solicitarea de anulare completa a grupului dumneavoastra a fost aprobata. Programarea a fost stearsa.";
+                                    notif.textMesaj = "Anulare completa aprobata.";
                                     cutiePostalaNotificari.push_back(notif);
 
                                     delete *it;
@@ -174,44 +171,38 @@ int main() {
                                 }
                                 ++it;
                             }
-                            std::cout << "[ADMIN] Grupul a fost anulat si eliminat complet.\n";
+                            std::cout << "[ADMIN] Grup anulat.\n";
                         }
                         break;
                     }
                     case 3: {
-                        std::cout << "\nVIZUALIZARE PROGRAMARI DUPA DATA\n";
-                        std::cout << "Introduceti data pentru cautare (Zi Luna An):\n";
+                        std::cout << "\nVIZUALIZARE PROGRAMARI DUPA DATA\nIntroduceti data:\n";
                         Date dt; std::cin >> dt;
                         bool gasit = false;
                         for (Group* g : toateGrupurileAprobate) {
                             if (g->getDataVizitei() == dt) {
-                                g->sortMembersByAge();
                                 std::cout << "\n[GRUP PROGRAMAT IN DATA DE " << dt << "]:\n" << *g;
                                 gasit = true;
                             }
                         }
-                        if (!gasit) std::cout << "Nu exista grupuri aprobate pentru data de " << dt << ".\n";
+                        if (!gasit) std::cout << "Nu exista grupuri aprobate.\n";
                         break;
                     }
-                    case 4:
-                        vr.interact();
-                        break;
-                    case 5: {
+                    case 4: {
                         std::cout << "\nEXPORT RAPORT VIZITE IN FISIER\n";
                         if (toateGrupurileAprobate.empty()) {
-                            std::cout << "Nu exista grupuri aprobate in acest moment pentru a genera un raport.\n";
+                            std::cout << "Nu exista grupuri aprobate.\n";
                             break;
                         }
 
                         std::ofstream fout("raport_vizite.txt");
                         if (!fout.is_open()) {
-                            std::cout << "[EROARE] Nu s-a putut crea fisierul raport_vizite.txt!\n";
+                            std::cout << "[EROARE] Nu s-a putut crea fisierul!\n";
                             break;
                         }
 
-                        fout << "        RAPORT MANAGER - VIZITE MUZEE APROBATE     \n";
-                        fout << "Total grupuri programate in sistem: " << toateGrupurileAprobate.size() << "\n\n";
-
+                        fout << "RAPORT MANAGER - VIZITE MUZEE\n";
+                        fout << "Total grupuri programate: " << toateGrupurileAprobate.size() << "\n\n";
                         double profitTotalEstimativ = 0.0;
 
                         for (size_t i = 0; i < toateGrupurileAprobate.size(); ++i) {
@@ -219,6 +210,7 @@ int main() {
                             fout << "Grupul #" << (i + 1) << ":\n";
                             fout << "  - Cod Muzeu Vizitat: " << g->getMuseumCode() << "\n";
                             fout << "  - Data programata: " << g->getDataVizitei() << "\n";
+                            fout << "  - A solicitat VR: " << (g->hasVR() ? "DA" : "NU") << "\n";
 
                             try {
                                 double venitGrup = g->calculateTotalRevenue();
@@ -228,25 +220,9 @@ int main() {
                                 fout << "  - Venit estimat grup: EROARE CALCUL\n";
                             }
                         }
-                        fout << " TOTAL VENITURI PROIECTATE: " << profitTotalEstimativ << " RON\n";
+                        fout << " TOTAL VENITURI: " << profitTotalEstimativ << " RON\n";
                         fout.close();
-                        std::cout << "Raportul a fost exportat cu succes in fisierul 'raport_vizite.txt'!\n";
-                        break;
-                    }
-                    case 6: {
-                        std::cout << "\nGESTIONARE DATE MUZEU SI EXPOZITII\n";
-                        std::cout << "Codul SIRUTA actual: " << loc.getSirutaCode() << "\n";
-                        loc.updateAddress("Soseaua Kiseleff Nr. 1");
-
-                        if (antipa.hasExhibition("Fluturi Exotici")) { }
-                        if (fluturi.isPremiumExhibition()) { }
-
-                        fluturi.setTitle("Fluturi Exotici - Editie de Toamna");
-                        fluturi.updatePrice(12.5);
-
-                        std::cout << "STATISTICI GLOBALE SISTEM\n";
-                        std::cout << "Numar total muzee inregistrate: " << Museum::getTotalMuseums() << "\n";
-                        std::cout << "Total istoric incasari efective: " << antipa.getTotalRevenue() << " RON\n";
+                        std::cout << "Export cu succes in 'raport_vizite.txt'!\n";
                         break;
                     }
                 }
@@ -304,37 +280,41 @@ int main() {
                     case 2: {
                         std::cout << "\nSOLICITARE PROGRAMARE VIZITA NOUA\n";
                         if (grupAsociatUtilizator != nullptr) {
-                            std::cout << "[LIMITARE] Aveti deja o vizita activa aprobata in sistem! Nu puteti programa alta.\n";
+                            std::cout << "[LIMITARE] Aveti deja o vizita activa!\n";
                             break;
                         }
 
-                        std::cout << "Introduceti data dorita pentru vizita (Zi Luna An):\n";
-                        Date dataDorita; std::cin >> dataDorita;
-                        std::cin.ignore(10000, '\n');
+                        std::cout << "Introduceti data (Zi Luna An):\n";
+                        Date dataDorita; std::cin >> dataDorita; std::cin.ignore(10000, '\n');
 
                         if (!dataDorita.isValid()) {
-                            std::cout << "[EROARE] Data invalida! Nu s-a putut salva cererea.\n";
+                            std::cout << "[EROARE] Data invalida!\n";
                             break;
                         }
 
-                        std::string raspunsGhid;
-                        std::cout << "\nDoriti tur cu ghid de la muzeu? (da/nu): ";
+                        std::string raspunsGhid, raspunsVR;
+                        std::cout << "\nTur cu ghid? (da/nu): ";
                         std::getline(std::cin, raspunsGhid);
+
+                        std::cout << "Doriti acces la echipamentele interactive VR (taxa suplimentara)? (da/nu): ";
+                        std::getline(std::cin, raspunsVR);
 
                         Group* grupNou = new Group("Muzeul Grigore Antipa", 101, dataDorita);
                         grupNou->addMember(profesorLogat->clone());
 
+                        if (raspunsVR == "da" || raspunsVR == "DA" || raspunsVR == "Da") {
+                            grupNou->setVR(true);
+                        }
+
                         int nrStudenti = 0;
-                        std::cout << "\nCati studenti doriti sa adaugati in grup? ";
-                        std::cin >> nrStudenti;
-                        std::cin.ignore(10000, '\n');
+                        std::cout << "\nCati studenti: ";
+                        std::cin >> nrStudenti; std::cin.ignore(10000, '\n');
 
                         for (int i = 0; i < nrStudenti; ++i) {
                             std::string numeS, prenumeS, emailS, scoalaS;
                             int varstaS, anStudiu;
 
-                            std::cout << "\nDate Student " << (i + 1) << "\n";
-                            std::cout << "Nume: "; std::getline(std::cin, numeS);
+                            std::cout << "\nDate Student " << (i + 1) << "\nNume: "; std::getline(std::cin, numeS);
                             std::cout << "Prenume: "; std::getline(std::cin, prenumeS);
                             std::cout << "Varsta: "; std::cin >> varstaS; std::cin.ignore(10000, '\n');
                             std::cout << "Email: "; std::getline(std::cin, emailS);
@@ -344,71 +324,58 @@ int main() {
                             try {
                                 grupNou->addMember(new Student(numeS, prenumeS, varstaS, emailS, new DiscountTicket(30.0, "RON", 0.5), scoalaS, anStudiu));
                             } catch (const std::exception& e) {
-                                std::cout << "[EROARE LA ADAUGARE STUDENT] " << e.what() << "\n";
+                                std::cout << "[EROARE] " << e.what() << "\n";
                             }
                         }
 
-                        std::string descriereCerere = "Prof. " + profesorLogat->getName() + " solicita vizita. Ghid solicitat: ";
-                        if (raspunsGhid == "da" || raspunsGhid == "DA" || raspunsGhid == "Da") {
-                            descriereCerere += "DA";
-                        } else {
-                            descriereCerere += "NU";
-                        }
-                        descriereCerere += " [REF:" + profesorLogat->getEmail() + "]";
+                        std::string descriereCerere = "Prof. " + profesorLogat->getName() + " solicita vizita. Ghid: ";
+                        descriereCerere += (raspunsGhid == "da" || raspunsGhid == "DA") ? "DA" : "NU";
+                        descriereCerere += (grupNou->hasVR() ? " | Extra: Echipament VR" : "");
 
                         Cerere nouaCerere(urmatorulIdCerere++, "PROGRAMARE", grupNou, "", descriereCerere);
                         cereriInAsteptare.push_back(nouaCerere);
-                        std::cout << "\n[SUCCES] Solicitarea a fost trimisa administratorului spre aprobare!\n";
+                        std::cout << "\n[SUCCES] Solicitare trimisa!\n";
                         break;
                     }
                     case 3: {
-                        std::cout << "\nSOLICITARE ANULARE BILET STUDENT\n";
+                        std::cout << "\nANULARE BILET STUDENT\n";
                         if (grupAsociatUtilizator == nullptr) {
-                            std::cout << "[EROARE LOGICA] Nu aveti niciun grup aprobat activ din care sa eliminati studenti!\n";
-                            break;
+                            std::cout << "[EROARE] Nu aveti grup aprobat.\n"; break;
                         }
-
-                        Date azi = Date::getToday();
-                        if (!(azi < grupAsociatUtilizator->getDataVizitei())) {
-                            std::cout << "[REFUZAT] Eroare politica anulare! Nu puteti modifica componenta grupului in ziua vizitei.\n";
-                            break;
+                        if (!(Date::getToday() < grupAsociatUtilizator->getDataVizitei())) {
+                            std::cout << "[REFUZAT] Eroare politica anulare.\n"; break;
                         }
-
-                        std::cout << "Introduceti email-ul studentului care nu mai poate veni: ";
+                        std::cout << "Email-ul studentului: ";
                         std::string emailStergere; std::getline(std::cin, emailStergere);
 
                         if (!grupAsociatUtilizator->areMembru(emailStergere)) {
-                            std::cout << "[EROARE LOGICA] Studentul cu email-ul " << emailStergere << " nu exista in grupul dumneavoastra! Cererea a fost respinsa automat.\n";
-                            break;
+                            std::cout << "[EROARE] Studentul nu exista in grup.\n"; break;
                         }
 
-                        Cerere nouaCerere(urmatorulIdCerere++, "ANULARE_STUDENT", grupAsociatUtilizator, emailStergere, "Solicitare eliminare student cu email: " + emailStergere + " [REF:" + profesorLogat->getEmail() + "]");
+
+                        Cerere nouaCerere(urmatorulIdCerere++, "ANULARE_STUDENT", grupAsociatUtilizator, emailStergere, "Solicitare stergere student din grup.");
                         cereriInAsteptare.push_back(nouaCerere);
-                        std::cout << "[SUCCES] Cererea de stergere a fost trimisa administratorului.\n";
+                        std::cout << "[SUCCES] Cerere stergere trimisa.\n";
                         break;
                     }
                     case 4: {
-                        std::cout << "\nSOLICITARE ANULARE COMPLETA GRUP\n";
+                        std::cout << "\nANULARE COMPLETA GRUP\n";
                         if (grupAsociatUtilizator == nullptr) {
-                            std::cout << "[EROARE LOGICA] Nu aveti o programare activa salvata pe care sa o puteti anula!\n";
-                            break;
+                            std::cout << "[EROARE] Nu aveti programare activa.\n"; break;
+                        }
+                        if (!(Date::getToday() < grupAsociatUtilizator->getDataVizitei())) {
+                            std::cout << "[REFUZAT] Eroare politica anulare.\n"; break;
                         }
 
-                        Date azi = Date::getToday();
-                        if (!(azi < grupAsociatUtilizator->getDataVizitei())) {
-                            std::cout << "[REFUZAT] Nu puteti anula vizita in aceeasi zi! Trebuie anulata cu minim o zi inainte.\n";
-                            break;
-                        }
-
-                        Cerere nouaCerere(urmatorulIdCerere++, "ANULARE_GRUP", grupAsociatUtilizator, "", "Solicitare anulare completa grup [REF:" + profesorLogat->getEmail() + "]");
+                        Cerere nouaCerere(urmatorulIdCerere++, "ANULARE_GRUP", grupAsociatUtilizator, "", "Solicitare anulare completa a excursiei.");
                         cereriInAsteptare.push_back(nouaCerere);
-                        std::cout << "[SUCCES] Solicitarea a fost trimisa catre administrator.\n";
+                        std::cout << "[SUCCES] Solicitare trimisa.\n";
                         break;
                     }
                     case 5: {
-                        std::cout << "\nSTATUS SI NOTIFICARI\nStatus cont: ";
-                        if (grupAsociatUtilizator != nullptr) std::cout << "PROGRAMARE CONFIRMATA in data de " << grupAsociatUtilizator->getDataVizitei() << "\n";
-                        else std::cout << "IN ASTEPTARE SAU FARA PROGRAMARI.\n";
+                        std::cout << "\nSTATUS SI NOTIFICARI\nStatus: ";
+                        if (grupAsociatUtilizator != nullptr) std::cout << "CONFIRMATA: " << grupAsociatUtilizator->getDataVizitei() << "\n";
+                        else std::cout << "IN ASTEPTARE.\n";
 
                         std::cout << "\nMesaje de la Administrator\n";
                         bool gasitMesaje = false;
@@ -418,76 +385,59 @@ int main() {
                                 gasitMesaje = true;
                             }
                         }
-                        if (!gasitMesaje) {
-                            std::cout << "Nu aveti mesaje noi.\n";
-                        }
+                        if (!gasitMesaje) std::cout << "Nu aveti mesaje noi.\n";
                         break;
                     }
                     case 6: {
                         std::cout << "\nEDITARE PROFIL SI REPROGRAMARE\n";
+                        std::string emailC = profesorLogat->getEmail();
+                        std::string nN, pN, eN, vS;
 
-                        std::string emailCautare = profesorLogat->getEmail();
+                        std::cout << "Nume nou (Enter pt a pastra): "; std::getline(std::cin, nN);
+                        std::cout << "Prenume nou (Enter pt a pastra): "; std::getline(std::cin, pN);
+                        std::cout << "Email nou (Enter pt a pastra): "; std::getline(std::cin, eN);
+                        std::cout << "Varsta noua (Enter pt a pastra): "; std::getline(std::cin, vS);
 
-                        std::string numeNou, prenumeNou, emailNou, varstaStr;
+                        if (!nN.empty()) profesorLogat->setName(nN);
+                        if (!pN.empty()) profesorLogat->setSurname(pN);
+                        if (!eN.empty()) profesorLogat->setEmail(eN);
+                        if (!vS.empty()) { try { profesorLogat->setAge(std::stoi(vS)); } catch (...) {} }
 
-                        std::cout << "Nume nou (sau apasa Enter pt a pastra): "; std::getline(std::cin, numeNou);
-                        std::cout << "Prenume nou (sau apasa Enter pt a pastra): "; std::getline(std::cin, prenumeNou);
-                        std::cout << "Email nou (sau apasa Enter pt a pastra): "; std::getline(std::cin, emailNou);
-                        std::cout << "Varsta noua (sau apasa Enter pt a pastra): "; std::getline(std::cin, varstaStr);
-
-
-                        if (!numeNou.empty()) profesorLogat->setName(numeNou);
-                        if (!prenumeNou.empty()) profesorLogat->setSurname(prenumeNou);
-                        if (!emailNou.empty()) profesorLogat->setEmail(emailNou);
-                        if (!varstaStr.empty()) {
-                            try { profesorLogat->setAge(std::stoi(varstaStr)); } catch (...) {}
-                        }
-
-                        Group* grupDeModificat = grupAsociatUtilizator;
-                        if (grupDeModificat == nullptr) {
+                        Group* gr = grupAsociatUtilizator;
+                        if (!gr) {
                             for (const auto& c : cereriInAsteptare) {
-                                if (c.getGrupAsociat() && c.getGrupAsociat()->areMembru(emailCautare)) {
-                                    grupDeModificat = c.getGrupAsociat();
-                                    break;
+                                if (c.getGrupAsociat() && c.getGrupAsociat()->areMembru(emailC)) {
+                                    gr = c.getGrupAsociat(); break;
                                 }
                             }
                         }
 
-
-                        if (grupDeModificat != nullptr) {
-                            std::string raspuns;
-                            std::cout << "\nDoriti sa reprogramati vizita pe o alta data? (da/nu): ";
-                            std::getline(std::cin, raspuns);
-                            if (raspuns == "da" || raspuns == "DA" || raspuns == "Da") {
-                                std::cout << "Introduceti noua data (Zi Luna An):\n";
+                        if (gr) {
+                            std::string rasp;
+                            std::cout << "\nReprogramati vizita? (da/nu): "; std::getline(std::cin, rasp);
+                            if (rasp == "da" || rasp == "DA") {
+                                std::cout << "Noua data (Zi Luna An):\n";
                                 Date dataNoua; std::cin >> dataNoua; std::cin.ignore(10000, '\n');
                                 if (dataNoua.isValid()) {
-                                    grupDeModificat->setDataVizitei(dataNoua);
-                                    std::cout << "[SUCCES] Vizita a fost reprogramata!\n";
-                                } else {
-                                    std::cout << "[EROARE] Data invalida. Reprogramarea a esuat.\n";
-                                }
+                                    gr->setDataVizitei(dataNoua);
+                                    std::cout << "[SUCCES] Reprogramata!\n";
+                                } else std::cout << "[EROARE] Data invalida.\n";
                             }
-                        } else {
-                            std::cout << "[INFO] Nu aveti nicio programare (nici in asteptare, nici aprobata) pe care sa o reprogramati.\n";
                         }
-
-                        std::cout << "[SUCCES] Datele profilului au fost actualizate!\n";
+                        std::cout << "[SUCCES] Profil actualizat!\n";
                         break;
                     }
                 }
             }
         }
         else {
-            std::cout << "[OPTIUNE INVALIDA] Va rugam sa scrieti exact 'administrator' sau 'utilizator'.\n\n";
+            std::cout << "[OPTIUNE INVALIDA]\n\n";
         }
     }
 
-
     for (Group* g : toateGrupurileAprobate) delete g;
 
-
-    for (const auto& c : cereriInAsteptare) {
+    for (auto& c : cereriInAsteptare) {
         if (c.getTip() == "PROGRAMARE") delete c.getGrupAsociat();
     }
 
@@ -502,6 +452,6 @@ int main() {
         if (!dejaSters) delete p;
     }
 
-    std::cout << "\nProgram Finalizat cu Succes\n";
+    std::cout << "\nProgram Finalizat\n";
     return 0;
 }

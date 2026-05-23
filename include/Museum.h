@@ -22,19 +22,15 @@ public:
 
     static int getTotalMuseums();
     void addExhibition(const Exhibition& ex);
-    void addVote(int score);
+
 
     [[nodiscard]] bool hasExhibition(const std::string& searchTitle) const;
     [[nodiscard]] int totalItems() const;
-    [[nodiscard]] double averageVote() const;
     [[nodiscard]] long getCode() const;
     [[nodiscard]] const std::string& getName() const;
 
     double getTotalRevenue() const;
     void hostGroupVisit(const Group& g);
-    std::vector<Exhibition> getAffordableExhibitions(double maxBudget) const;
-
-
 
     friend std::ostream& operator<<(std::ostream& os, const Museum& m);
 };

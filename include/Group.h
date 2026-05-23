@@ -13,6 +13,7 @@ private:
     std::string museum_name;
     [[nodiscard]] bool isEmailDuplicate(const std::string& email) const;
     Date dataVizitei;
+    bool optiuneVR = false;
 
 public:
     Group(const std::string& museum_name_, long museum_code_,const Date& data_);
@@ -24,13 +25,12 @@ public:
     void setGuide(Person* newGuide);
     void addMember(Person* member);
 
-    [[nodiscard]]double calculateAverageAge() const;
+
     [[nodiscard]] bool isReadyForVisit() const;
 
     [[nodiscard]] double calculateTotalRevenue() const;
 
     void sortMembersByAge();
-    int countMinors() const;
 
     long getMuseumCode() const { return museum_code; }
 
@@ -43,4 +43,7 @@ public:
     bool areMembru(const std::string& emailCautat) const;
 
     void setDataVizitei(const Date& nouaData);
+
+    void setVR(bool vr) { optiuneVR = vr; }
+    bool hasVR() const { return optiuneVR; }
 };

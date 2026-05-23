@@ -10,7 +10,6 @@ private:
 public:
     Location(std::string county_, std::string address_, int siruta_);
     Location();
-    [[nodiscard]] const std::string& getCounty() const;
     [[nodiscard]] int getSirutaCode() const;
     void updateAddress(const std::string& newAddress);
     bool operator==(const Location& other) const;

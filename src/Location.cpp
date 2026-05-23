@@ -5,8 +5,6 @@ Location::Location(std::string county_, std::string address_, int siruta_)
 
 Location::Location() : county{"N/A"}, address{"N/A"}, sirutaCode{0} {}
 
-const std::string& Location::getCounty() const { return county; }
-
 int Location::getSirutaCode() const { return sirutaCode; }
 
 void Location::updateAddress(const std::string& newAddress) {

@@ -60,23 +60,14 @@ void Group::addMember(Person* member) {
     members.push_back(member);
 }
 
-double Group::calculateAverageAge() const {
-    if (members.empty()) return 0.0;
-    double sum = 0;
-    for (const Person* p : members) sum += p->getAge();
-    return sum / (double)members.size();
-}
+
 void Group::sortMembersByAge() {
     std::sort(members.begin(), members.end(), [](const Person* a, const Person* b) {
         return a->getAge() < b->getAge();
     });
 }
 
-int Group::countMinors() const {
-    return std::count_if(members.begin(), members.end(), [](const Person* p) {
-        return p->isMinor();
-    });
-}
+
 
 bool Group::isReadyForVisit() const {
     bool ready = !members.empty() && members.size() <= 10 && museum_code != 0;
@@ -141,12 +132,14 @@ double Group::calculateTotalRevenue() const {
     if (guide != nullptr) {
         total += guide->getTicketFinalPrice() + 50.0;
     }
+    if (optiuneVR) total += 30.0;
 
     return total;
 }
 
 std::ostream& operator<<(std::ostream& os, const Group& g) {
     os << "Grup Muzeu [" << g.museum_code << "]\n";
+    os << "Optiune VR: " << (g.hasVR() ? "DA" : "NU") << "\n";
     if (g.guide) {
         os << "Ghid: " << *(g.guide) << "\n";
     }

@@ -11,7 +11,6 @@ Museum::Museum(std::string name_, long code_, Location loc_)
 
 int Museum::getTotalMuseums() { return totalMuseumsCreated; }
 void Museum::addExhibition(const Exhibition& ex) { exhibitions.push_back(ex); }
-void Museum::addVote(int score) { popularityVotes.push_back(score); }
 
 bool Museum::hasExhibition(const std::string& searchTitle) const {
     return std::any_of(exhibitions.begin(), exhibitions.end(),
@@ -24,12 +23,6 @@ int Museum::totalItems() const {
     return total;
 }
 
-double Museum::averageVote() const {
-    if (popularityVotes.empty()) return 0.0;
-    double sum = 0;
-    for (int v : popularityVotes) sum += v;
-    return sum / popularityVotes.size();
-}
 
 long Museum::getCode() const { return code; }
 const std::string& Museum::getName() const { return name; }
@@ -48,15 +41,6 @@ void Museum::hostGroupVisit(const Group& g) {
 
     std::cout << "Vizita acceptata! Muzeul " << this->name
               << " a incasat " << baniIncasati << " RON de la acest grup.\n";
-}
-
-std::vector<Exhibition> Museum::getAffordableExhibitions(double maxBudget) const {
-    std::vector<Exhibition> affordable;
-    std::copy_if(exhibitions.begin(), exhibitions.end(), std::back_inserter(affordable),
-                 [maxBudget](const Exhibition& ex) {
-                     return ex.getExtraFee() <= maxBudget;
-                 });
-    return affordable;
 }
 
 std::ostream& operator<<(std::ostream& os, const Museum& m) {
