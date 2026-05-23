@@ -69,8 +69,6 @@ int main() {
 
         if (!std::getline(std::cin, rolCurent)) break;
 
-        std::getline(std::cin, rolCurent);
-
         if (rolCurent == "iesire") break;
 
         if (rolCurent == "administrator") {
