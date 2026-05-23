@@ -10,7 +10,7 @@ protected:
     void afisare(std::ostream& os) const override;
 
 public:
-    Professor(const std::string& surname_, const std::string& name_, int age_,
+    Professor(const std::string& name_, const std::string& surname_, int age_,
               const std::string& email_, Ticket* ticket_, int experience_, const std::string& school_);
 
     [[nodiscard]] Person* clone() const override;
