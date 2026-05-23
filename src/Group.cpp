@@ -19,7 +19,7 @@ Group::~Group() {
 
 Group::Group(const Group& other) : museum_code(other.museum_code), museum_name(other.museum_name), dataVizitei(other.dataVizitei){
     guide = other.guide ? other.guide->clone() : nullptr;
-    for (Person* p : other.members) {
+    for (const Person* p : other.members) {
         members.push_back(p->clone());
     }
 }
@@ -40,7 +40,7 @@ void Group::setGuide(Person* newGuide) {
 }
 
 bool Group::isEmailDuplicate(const std::string& email) const {
-    for (Person* p : members)
+    for (const Person* p : members)
         if (p->getEmail() == email) return true;
     return false;
 }
@@ -63,17 +63,17 @@ void Group::addMember(Person* member) {
 double Group::calculateAverageAge() const {
     if (members.empty()) return 0.0;
     double sum = 0;
-    for (const auto& p : members) sum += p->getAge();
+    for (const Person* p : members) sum += p->getAge();
     return sum / (double)members.size();
 }
 void Group::sortMembersByAge() {
-    std::sort(members.begin(), members.end(), [](Person* a, Person* b) {
+    std::sort(members.begin(), members.end(), [](const Person* a, const Person* b) {
         return a->getAge() < b->getAge();
     });
 }
 
 int Group::countMinors() const {
-    return std::count_if(members.begin(), members.end(), [](Person* p) {
+    return std::count_if(members.begin(), members.end(), [](const Person* p) {
         return p->isMinor();
     });
 }
@@ -120,7 +120,7 @@ bool Group::isReadyForVisit() const {
         ss << "\nTotal de incasat: " << totalGeneral << " RON\n";
 
         for (Person* p : members) {
-            Professor* prof = dynamic_cast<Professor*>(p);
+            const Professor* prof = dynamic_cast<Professor*>(p);
             if (prof != nullptr) {
                 prof->receiveNotification(museum_name, museum_code, ss.str());
             }
@@ -135,7 +135,7 @@ double Group::calculateTotalRevenue() const {
     }
 
     double total = 0;
-    for (Person* p : members) {
+    for (const Person* p : members) {
         total += p->getTicketFinalPrice();
     }
     if (guide != nullptr) {
@@ -154,7 +154,7 @@ std::ostream& operator<<(std::ostream& os, const Group& g) {
         os << "Ghid: nespecificat\n";
     }
     os << "Membri:\n";
-    for (Person* p : g.members)
+    for (const Person* p : g.members)
         os << " - " << *p << "\n";
 
     return os;
@@ -183,7 +183,7 @@ void Group::removeMember(const std::string& emailStergere) {
 }
 
 bool Group::areMembru(const std::string& emailCautat) const {
-    for (Person* p : members) {
+    for (const Person* p : members) {
         if (p->getEmail() == emailCautat) return true;
     }
     return false;

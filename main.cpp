@@ -123,7 +123,7 @@ int main() {
                         std::string emailProfAsociat = "";
                         if (c.getGrupAsociat() && c.getDescriere().find("[REF:") != std::string::npos) {
                             emailProfAsociat = c.getDescriere().substr(c.getDescriere().find("[REF:") + 5);
-                            emailProfAsociat = emailProfAsociat.substr(0, emailProfAsociat.find("]"));
+                            emailProfAsociat.erase(emailProfAsociat.find("]"));
                         }
 
                         if (c.getTip() == "PROGRAMARE") {
@@ -215,7 +215,7 @@ int main() {
                         double profitTotalEstimativ = 0.0;
 
                         for (size_t i = 0; i < toateGrupurileAprobate.size(); ++i) {
-                            Group* g = toateGrupurileAprobate[i];
+                            const Group* g = toateGrupurileAprobate[i];
                             fout << "Grupul #" << (i + 1) << ":\n";
                             fout << "  - Cod Muzeu Vizitat: " << g->getMuseumCode() << "\n";
                             fout << "  - Data programata: " << g->getDataVizitei() << "\n";
@@ -445,7 +445,7 @@ int main() {
 
                         Group* grupDeModificat = grupAsociatUtilizator;
                         if (grupDeModificat == nullptr) {
-                            for (auto& c : cereriInAsteptare) {
+                            for (const auto& c : cereriInAsteptare) {
                                 if (c.getGrupAsociat() && c.getGrupAsociat()->areMembru(emailCautare)) {
                                     grupDeModificat = c.getGrupAsociat();
                                     break;
@@ -487,13 +487,13 @@ int main() {
     for (Group* g : toateGrupurileAprobate) delete g;
 
 
-    for (auto& c : cereriInAsteptare) {
+    for (const auto& c : cereriInAsteptare) {
         if (c.getTip() == "PROGRAMARE") delete c.getGrupAsociat();
     }
 
     for (Professor* p : conturiProfesori) {
         bool dejaSters = false;
-        for (Group* g : toateGrupurileAprobate) {
+        for (const Group* g : toateGrupurileAprobate) {
             if (g->areMembru(p->getEmail())) {
                 dejaSters = true;
                 break;

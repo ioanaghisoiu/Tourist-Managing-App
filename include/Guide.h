@@ -21,7 +21,7 @@ public:
 
     [[nodiscard]] std::string getRole() const override { return "Ghid"; }
 
-    [[nodiscard]] std::string getForeignLanguage() const { return foreignLanguage; }
+    [[nodiscard]] const std::string getForeignLanguage() const { return foreignLanguage; }
     [[nodiscard]] int getBadgeNumber() const { return badgeNumber; }
     double getTicketDiscount() const override;
 };

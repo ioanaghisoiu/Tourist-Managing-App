@@ -31,7 +31,7 @@ public:
     [[nodiscard]] const std::string& getName() const;
 
     double getTotalRevenue() const;
-    void hostGroupVisit(Group& g);
+    void hostGroupVisit(const Group& g);
     std::vector<Exhibition> getAffordableExhibitions(double maxBudget) const;
 
 

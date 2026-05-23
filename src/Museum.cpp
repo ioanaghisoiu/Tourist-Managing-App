@@ -38,7 +38,7 @@ double Museum::getTotalRevenue() const {
     return totalRevenue;
 }
 
-void Museum::hostGroupVisit(Group& g) {
+void Museum::hostGroupVisit(const Group& g) {
     if (g.getMuseumCode() != this->code) {
         throw WrongMuseumException();
     }
