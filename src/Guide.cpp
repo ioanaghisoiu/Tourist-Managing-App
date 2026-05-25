@@ -18,3 +18,11 @@ void Guide::afisare(std::ostream& os) const {
        << ", Limba: " << foreignLanguage << ", Ecuson: " << badgeNumber <<")";
 }
 
+
+void Guide::vizioneazaExpozitia() const {
+    if (foreignLanguage == "Romana") {
+        std::cout << "Ghidul " << name << " conduce grupul si prezinta istoria exponatelor pe intelesul tuturor.\n";
+    } else {
+        std::cout << "Ghidul " << name << " face un tur special, explicand exponatele in limba " << foreignLanguage << ".\n";
+    }
+}

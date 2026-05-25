@@ -84,6 +84,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/InteractiveExhibition.cpp
         include/Cerere.h
         src/Cerere.cpp
+        include/MuseumApp.h
+        src/MuseumApp.cpp
 )
 target_sources(${MAIN_EXECUTABLE_NAME}
     PRIVATE

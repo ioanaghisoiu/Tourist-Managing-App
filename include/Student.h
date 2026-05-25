@@ -18,4 +18,6 @@ public:
    [[nodiscard]] std::string getRole() const override { return "Student"; }
     [[nodiscard]] double getTicketDiscount() const override { return 0.5; }
 
+    void vizioneazaExpozitia() const override;
+
 };

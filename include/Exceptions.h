@@ -1,6 +1,9 @@
 #pragma once
 #include <exception>
 
+
+
+
 class GroupThresholdException : public std::exception {
 public:
      [[nodiscard]]const char* what() const noexcept override;

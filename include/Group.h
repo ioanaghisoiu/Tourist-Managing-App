@@ -46,4 +46,6 @@ public:
 
     void setVR(bool vr) { optiuneVR = vr; }
     bool hasVR() const { return optiuneVR; }
+
+    void monitorizeazaActivitateLive() const;
 };

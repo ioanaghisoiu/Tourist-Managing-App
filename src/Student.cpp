@@ -1,4 +1,5 @@
 #include "Student.h"
+#include "Exceptions.h"
 
 Student::Student(const std::string& name_, const std::string& surname_, int age_,
                  const std::string& email_, Ticket* ticket_,
@@ -13,3 +14,10 @@ void Student::afisare(std::ostream& os) const {
     os << name << " " << surname << " (" << age << " ani, Rol: " << getRole()
        << ", Scoala: " << school << ", An: " << studyYear<<")";
 }
+
+
+void Student::vizioneazaExpozitia() const {
+    std::cout << "Studentul " << name << " " << surname
+              << " face poze exponatelor si pune intrebari.\n";
+}
+

@@ -18,4 +18,8 @@ public:
 
     void receiveNotification(const std::string& museumName, long museumCode, const std::string& message) const;
     [[nodiscard]] double getTicketDiscount() const override { return 0.2; }
+
+    void vizioneazaExpozitia() const override;
+
 };
+

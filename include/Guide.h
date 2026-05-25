@@ -24,4 +24,7 @@ public:
     [[nodiscard]] const std::string& getForeignLanguage() const { return foreignLanguage; }
     [[nodiscard]] int getBadgeNumber() const { return badgeNumber; }
     double getTicketDiscount() const override;
+
+    void vizioneazaExpozitia() const override;
+
 };

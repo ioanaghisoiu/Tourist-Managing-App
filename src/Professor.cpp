@@ -18,3 +18,8 @@ void Professor::receiveNotification(const std::string& museumName, long museumCo
     std::cout << "Notificare primita de Profesorul " << name << " " << surname
               << " pentru muzeul " << museumName << " [" << museumCode << "]: " << message << "\n";
 }
+
+void Professor::vizioneazaExpozitia() const {
+    std::cout << "Profesorul " << name << " " << surname
+              << " le explica elevilor legatura dintre exponate si materia de la clasa.\n";
+}

@@ -185,3 +185,17 @@ bool Group::areMembru(const std::string& emailCautat) const {
 void Group::setDataVizitei(const Date& nouaData) {
     dataVizitei = nouaData;
 }
+
+void Group::monitorizeazaActivitateLive() const {
+    std::cout << "   PANOU CONTROL: MONITORIZARE ACTIVITATE GRUP (LIVE) \n";
+
+    for (const Person* p : members) {
+        p->vizioneazaExpozitia();
+    }
+
+    if (guide!= nullptr) {
+        guide->vizioneazaExpozitia();
+    }
+}
+
+
