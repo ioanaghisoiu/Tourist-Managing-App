@@ -34,7 +34,7 @@ MuseumApp::~MuseumApp() {
     }
 }
 
-void MuseumApp::afiseazaMeniuUtilizator() const {
+void MuseumApp::afiseazaMeniuUtilizator(){
     std::cout << "\nMENIU UTILIZATOR\n";
     std::cout << "1. Vizualizeaza Muzeu si Expozitii disponibile\n";
     std::cout << "2. Trimite cerere de programare vizita noua \n";
@@ -46,7 +46,7 @@ void MuseumApp::afiseazaMeniuUtilizator() const {
     std::cout << "Alege o optiune: ";
 }
 
-void MuseumApp::afiseazaMeniuAdministrator() const {
+void MuseumApp::afiseazaMeniuAdministrator() {
     std::cout << "\nMENIU ADMINISTRATOR\n";
     std::cout << "1. Vizualizeaza cererile trimise de profesori \n";
     std::cout << "2. Aproba si executa urmatoarea cerere din lista \n";
@@ -117,7 +117,7 @@ void MuseumApp::handleAdministrator() {
                             limbaGhid = "Engleza";
                         }
 
-                        Guide* ghidAlocat = new Guide("Elena", "Ghidul", 28, "elena@muzeu.ro", new Ticket(0.0, "RON", false), limbaGhid, 999);
+                        Guide* ghidAlocat = new Guide("Elena", "Ghidul", 28, "elena@gamil.com", new Ticket(0.0, "RON", false), limbaGhid, 999);
                         std::cout << "Alocare ghid cu ecusonul nr. " << ghidAlocat->getBadgeNumber()
                                   << " pentru limba " << ghidAlocat->getForeignLanguage() << ".\n";
 
@@ -308,7 +308,7 @@ void MuseumApp::handleUtilizator() {
         return;
     }
 
-    std::string emailUtilizatorCurent = logNume + "." + logPrenume + "@scoala.ro";
+    std::string emailUtilizatorCurent = logNume + "." + logPrenume + "@gmail.com";
     Professor* profesorLogat = nullptr;
 
     for (const Professor* p : conturiProfesori) {
@@ -333,13 +333,14 @@ void MuseumApp::handleUtilizator() {
     }
     std::cout << "\n[ACCES CONFIRMAT] Bun venit, " << profesorLogat->getName() << ".\n";
 
-    Group* grupCurent = nullptr;
+    const Group* grupCurent = nullptr;
     for (const Group* g : toateGrupurileAprobate) {
         if (g->areMembru(profesorLogat->getEmail())) {
-            grupCurent = const_cast<Group*>(g);
+            grupCurent = g;
             break;
         }
     }
+
     if (grupCurent != nullptr && grupCurent->getDataVizitei() == Date::getToday()) {
         std::cout << "\n [NOTIFICARE SISTEM] Grupul dumneavoastra are vizita programata ASTAZI!\n";
     } else if (grupCurent != nullptr) {

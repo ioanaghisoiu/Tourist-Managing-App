@@ -28,8 +28,8 @@ private:
     std::vector<MesajNotificare> cutiePostalaNotificari;
     int urmatorulIdCerere;
 
-    void afiseazaMeniuUtilizator() const;
-    void afiseazaMeniuAdministrator() const;
+    static void afiseazaMeniuUtilizator();
+    static void afiseazaMeniuAdministrator();
     void handleAdministrator();
     void handleUtilizator();
 
