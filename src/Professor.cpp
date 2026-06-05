@@ -23,3 +23,11 @@ void Professor::vizioneazaExpozitia() const {
     std::cout << "Profesorul " << name << " " << surname
               << " le explica elevilor legatura dintre exponate si materia de la clasa.\n";
 }
+
+void Professor::onNotificare(const std::string& mesaj) {
+    mesajePrimite.push_back(mesaj);
+}
+
+const std::vector<std::string>& Professor::getMesaje() const {
+    return mesajePrimite;
+}

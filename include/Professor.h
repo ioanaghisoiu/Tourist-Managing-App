@@ -1,10 +1,14 @@
 #pragma once
+#include <vector>
+#include <string>
 #include "Person.h"
+#include "IObserver.h"
 
-class Professor : public Person {
+class Professor : public Person, public IObserver {
 private:
     int experience;
     std::string school;
+    std::vector<std::string> mesajePrimite;
 
 protected:
     void afisare(std::ostream& os) const override;
@@ -21,5 +25,6 @@ public:
 
     void vizioneazaExpozitia() const override;
 
+    void onNotificare(const std::string& mesaj) override;
+    [[nodiscard]] const std::vector<std::string>& getMesaje() const;
 };
-

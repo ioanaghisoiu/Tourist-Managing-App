@@ -86,6 +86,11 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Cerere.cpp
         include/MuseumApp.h
         src/MuseumApp.cpp
+        include/TicketFactory.h
+        src/TicketFactory.cpp
+        include/IObserver.h
+        include/NotificationCenter.h
+        src/NotificationCenter.cpp
 )
 target_sources(${MAIN_EXECUTABLE_NAME}
     PRIVATE

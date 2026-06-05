@@ -8,12 +8,7 @@
 #include "Cerere.h"
 #include "TemporaryExhibition.h"
 #include "InteractiveExhibition.h"
-
-class MesajNotificare {
-public:
-    std::string emailProfesor;
-    std::string textMesaj;
-};
+#include "NotificationCenter.h"
 
 class MuseumApp {
 private:
@@ -25,7 +20,7 @@ private:
     std::vector<Group*> toateGrupurileAprobate;
     std::vector<Cerere> cereriInAsteptare;
     std::vector<Professor*> conturiProfesori;
-    std::vector<MesajNotificare> cutiePostalaNotificari;
+    NotificationCenter notificationCenter;
     int urmatorulIdCerere;
 
     static void afiseazaMeniuUtilizator();

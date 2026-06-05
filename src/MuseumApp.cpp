@@ -7,6 +7,7 @@
 #include "DiscountTicket.h"
 #include "Exceptions.h"
 #include "Date.h"
+#include "TicketFactory.h"
 
 MuseumApp::MuseumApp()
     : loc("Bucuresti", "Calea Victoriei 12", 179132),
@@ -117,7 +118,7 @@ void MuseumApp::handleAdministrator() {
                             limbaGhid = "Engleza";
                         }
 
-                        Guide* ghidAlocat = new Guide("Elena", "Ghidul", 28, "elena@gamil.com", new Ticket(0.0, "RON", false), limbaGhid, 999);
+                        Guide* ghidAlocat = new Guide("Elena", "Ghidul", 28, "elena@gamil.com", TicketFactory::createFree(), limbaGhid, 999);
                         std::cout << "Alocare ghid cu ecusonul nr. " << ghidAlocat->getBadgeNumber()
                                   << " pentru limba " << ghidAlocat->getForeignLanguage() << ".\n";
 
@@ -137,10 +138,7 @@ void MuseumApp::handleAdministrator() {
                     try { antipa.hostGroupVisit(*(c.getGrupAsociat())); } catch (...) {}
                     (void)c.getGrupAsociat()->isReadyForVisit();
 
-                    MesajNotificare notif;
-                    notif.emailProfesor = emailProfAsociat;
-                    notif.textMesaj = "Cererea de programare a fost aprobata!";
-                    cutiePostalaNotificari.push_back(notif);
+                    notificationCenter.notify(emailProfAsociat, "Cererea de programare a fost aprobata!");
                 }
                 else if (c.getTip() == "ANULARE_STUDENT") {
                     try {
@@ -148,10 +146,7 @@ void MuseumApp::handleAdministrator() {
                         std::cout << "Studentul a fost eliminat.\n";
                         double totalNou = c.getGrupAsociat()->calculateTotalRevenue();
 
-                        MesajNotificare notif;
-                        notif.emailProfesor = emailProfAsociat;
-                        notif.textMesaj = "Student sters. Nou total: " + std::to_string(totalNou) + " RON.";
-                        cutiePostalaNotificari.push_back(notif);
+                        notificationCenter.notify(emailProfAsociat, "Student sters. Nou total: " + std::to_string(totalNou) + " RON.");
                     } catch (const std::exception& e) {
                         std::cout << "[EROARE] " << e.what() << "\n";
                     }
@@ -160,11 +155,7 @@ void MuseumApp::handleAdministrator() {
                     auto it = toateGrupurileAprobate.begin();
                     while (it != toateGrupurileAprobate.end()) {
                         if (*it == c.getGrupAsociat()) {
-                            MesajNotificare notif;
-                            notif.emailProfesor = emailProfAsociat;
-                            notif.textMesaj = "Anulare completa aprobata.";
-                            cutiePostalaNotificari.push_back(notif);
-
+                            notificationCenter.notify(emailProfAsociat, "Anulare completa aprobata.");
                             delete *it;
                             toateGrupurileAprobate.erase(it);
                             break;
@@ -278,7 +269,6 @@ void MuseumApp::handleAdministrator() {
                     if (g->getDataVizitei() == Date::getToday()) {
                         grupuriActive = true;
                         std::cout << "\n[SISTEM] Grup detectat in interiorul muzeului (Cod: " << g->getMuseumCode() << ")\n";
-
                         g->monitorizeazaActivitateLive();
                     }
                 }
@@ -327,10 +317,12 @@ void MuseumApp::handleUtilizator() {
         std::cin.ignore(10000, '\n');
         std::cout << "Scoala/Liceul la care predati: "; std::getline(std::cin, scoalaP);
 
-        profesorLogat = new Professor(logNume, logPrenume, varstaP, emailUtilizatorCurent, new Ticket(30.0, "RON", false), expP, scoalaP);
+        profesorLogat = new Professor(logNume, logPrenume, varstaP, emailUtilizatorCurent, TicketFactory::createStandard(30.0), expP, scoalaP);
         conturiProfesori.push_back(profesorLogat);
         std::cout << "[CONT CREAT CU SUCCES]\n";
     }
+
+    notificationCenter.subscribe(profesorLogat->getEmail(), profesorLogat);
     std::cout << "\n[ACCES CONFIRMAT] Bun venit, " << profesorLogat->getName() << ".\n";
 
     const Group* grupCurent = nullptr;
@@ -347,7 +339,6 @@ void MuseumApp::handleUtilizator() {
         std::cout << "\n [NOTIFICARE SISTEM] Status excursie urmatoare: PLANIFICATA (Data: "
                   << grupCurent->getDataVizitei() << ")\n";
     }
-
 
     if (profesorLogat->isMinor()) {
         std::cout << "Atentie: Profil de cadru didactic incadrat la categoria minori.\n";
@@ -444,12 +435,11 @@ void MuseumApp::handleUtilizator() {
                     std::cout << "An de studiu: "; std::cin >> anStudiu; std::cin.ignore(10000, '\n');
 
                     try {
-                        grupNou->addMember(new Student(numeS, prenumeS, varstaS, emailS, new DiscountTicket(30.0, "RON", 0.5), scoalaS, anStudiu));
+                        grupNou->addMember(new Student(numeS, prenumeS, varstaS, emailS, TicketFactory::createDiscount(30.0, 0.5), scoalaS, anStudiu));
                     } catch (const std::exception& e) {
                         std::cout << "[EROARE] " << e.what() << "\n";
                     }
                 }
-
 
                 std::string decizieGhid = (raspunsGhid == "da" || raspunsGhid == "DA" || raspunsGhid == "Da") ? "DA (" + raspunsLimba + ")" : "NU";
                 std::string descriereCerere = "Prof. " + profesorLogat->getName() + " solicita vizita. Ghid: " + decizieGhid;
@@ -502,11 +492,9 @@ void MuseumApp::handleUtilizator() {
 
                 std::cout << "\nMesaje de la Administrator\n";
                 bool gasitMesaje = false;
-                for (const auto& n : cutiePostalaNotificari) {
-                    if (n.emailProfesor == profesorLogat->getEmail()) {
-                        std::cout << ">> " << n.textMesaj << "\n";
-                        gasitMesaje = true;
-                    }
+                for (const auto& mesaj : profesorLogat->getMesaje()) {
+                    std::cout << ">> " << mesaj << "\n";
+                    gasitMesaje = true;
                 }
                 if (!gasitMesaje) std::cout << "Nu aveti mesaje noi.\n";
                 break;
@@ -540,7 +528,7 @@ void MuseumApp::handleUtilizator() {
                     std::cout << "\nReprogramati vizita? (da/nu): "; std::getline(std::cin, rasp);
                     if (rasp == "da" || rasp == "DA") {
                         std::cout << "Noua data (Zi Luna An):\n";
-                        Date dataNoua; 
+                        Date dataNoua;
                         if (std::cin >> dataNoua) {
                             std::cin.ignore(10000, '\n');
                             if (dataNoua.isValid()) {
