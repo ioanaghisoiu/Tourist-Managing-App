@@ -19,13 +19,13 @@ MuseumApp::MuseumApp()
 }
 
 MuseumApp::~MuseumApp() {
-    for (Group* g : toateGrupurileAprobate) delete g;
+    for (Group* g : toateGrupurileAprobate.getAll()) delete g;
     for (const auto& c : cereriInAsteptare) {
         if (c.getTip() == "PROGRAMARE") delete c.getGrupAsociat();
     }
-    for (Professor* p : conturiProfesori) {
+    for (Professor* p : conturiProfesori.getAll()) {
         bool dejaSters = false;
-        for (const Group* g : toateGrupurileAprobate) {
+        for (const Group* g : toateGrupurileAprobate.getAll()) {
             if (g->areMembru(p->getEmail())) {
                 dejaSters = true;
                 break;
@@ -102,12 +102,10 @@ void MuseumApp::handleAdministrator() {
 
                 std::string emailProfAsociat = "";
                 if (c.getGrupAsociat()) {
-                    for (const Professor* p : conturiProfesori) {
-                        if (c.getGrupAsociat()->areMembru(p->getEmail())) {
-                            emailProfAsociat = p->getEmail();
-                            break;
-                        }
-                    }
+                    auto foundProf = conturiProfesori.findIf([&c](Professor* p) {
+                        return c.getGrupAsociat()->areMembru(p->getEmail());
+                    });
+                    if (foundProf) emailProfAsociat = (*foundProf)->getEmail();
                 }
 
                 if (c.getTip() == "PROGRAMARE") {
@@ -134,7 +132,7 @@ void MuseumApp::handleAdministrator() {
                         vr.interact();
                     }
 
-                    toateGrupurileAprobate.push_back(c.getGrupAsociat());
+                    toateGrupurileAprobate.add(c.getGrupAsociat());
                     try { antipa.hostGroupVisit(*(c.getGrupAsociat())); } catch (...) {}
                     (void)c.getGrupAsociat()->isReadyForVisit();
 
@@ -152,16 +150,10 @@ void MuseumApp::handleAdministrator() {
                     }
                 }
                 else if (c.getTip() == "ANULARE_GRUP") {
-                    auto it = toateGrupurileAprobate.begin();
-                    while (it != toateGrupurileAprobate.end()) {
-                        if (*it == c.getGrupAsociat()) {
-                            notificationCenter.notify(emailProfAsociat, "Anulare completa aprobata.");
-                            delete *it;
-                            toateGrupurileAprobate.erase(it);
-                            break;
-                        }
-                        ++it;
-                    }
+                    Group* grupDeAnulat = c.getGrupAsociat();
+                    notificationCenter.notify(emailProfAsociat, "Anulare completa aprobata.");
+                    toateGrupurileAprobate.removeIf([grupDeAnulat](Group* g) { return g == grupDeAnulat; });
+                    delete grupDeAnulat;
                     std::cout << "Grup anulat.\n";
                 }
                 break;
@@ -172,7 +164,7 @@ void MuseumApp::handleAdministrator() {
                 if (!(std::cin >> dt)) break;
                 bool gasit = false;
 
-                for (Group* g : toateGrupurileAprobate) {
+                for (Group* g : toateGrupurileAprobate.getAll()) {
                     if (g->getDataVizitei() == dt) {
                         g->sortMembersByAge();
                         std::cout << "\n[GRUP PROGRAMAT IN DATA DE " << dt << "]:\n" << *g;
@@ -200,7 +192,7 @@ void MuseumApp::handleAdministrator() {
                 double profitTotalEstimativ = 0.0;
 
                 for (size_t i = 0; i < toateGrupurileAprobate.size(); ++i) {
-                    const Group* g = toateGrupurileAprobate[i];
+                    const Group* g = toateGrupurileAprobate.getAll()[i];
                     fout << "Grupul #" << (i + 1) << ":\n";
                     fout << "  - Cod Muzeu Vizitat: " << g->getMuseumCode() << "\n";
                     fout << "  - Data programata: " << g->getDataVizitei() << "\n";
@@ -265,7 +257,7 @@ void MuseumApp::handleAdministrator() {
                 std::cout << "\nPANOU MONITORIZARE LIVE (" << Date::getToday() << ")\n";
                 bool grupuriActive = false;
 
-                for (const Group* g : toateGrupurileAprobate) {
+                for (const Group* g : toateGrupurileAprobate.getAll()) {
                     if (g->getDataVizitei() == Date::getToday()) {
                         grupuriActive = true;
                         std::cout << "\n[SISTEM] Grup detectat in interiorul muzeului (Cod: " << g->getMuseumCode() << ")\n";
@@ -301,9 +293,8 @@ void MuseumApp::handleUtilizator() {
     std::string emailUtilizatorCurent = logNume + "." + logPrenume + "@gmail.com";
     Professor* profesorLogat = nullptr;
 
-    for (const Professor* p : conturiProfesori) {
-        if (p->getEmail() == emailUtilizatorCurent) { profesorLogat = const_cast<Professor*>(p); break; }
-    }
+    auto found = findByEmail(conturiProfesori, emailUtilizatorCurent);
+    if (found) profesorLogat = *found;
 
     if (profesorLogat == nullptr) {
         std::cout << "\nCREARE CONT NOU PROFESOR\n";
@@ -318,20 +309,17 @@ void MuseumApp::handleUtilizator() {
         std::cout << "Scoala/Liceul la care predati: "; std::getline(std::cin, scoalaP);
 
         profesorLogat = new Professor(logNume, logPrenume, varstaP, emailUtilizatorCurent, TicketFactory::createStandard(30.0), expP, scoalaP);
-        conturiProfesori.push_back(profesorLogat);
+        conturiProfesori.add(profesorLogat);
         std::cout << "[CONT CREAT CU SUCCES]\n";
     }
 
     notificationCenter.subscribe(profesorLogat->getEmail(), profesorLogat);
     std::cout << "\n[ACCES CONFIRMAT] Bun venit, " << profesorLogat->getName() << ".\n";
 
-    const Group* grupCurent = nullptr;
-    for (const Group* g : toateGrupurileAprobate) {
-        if (g->areMembru(profesorLogat->getEmail())) {
-            grupCurent = g;
-            break;
-        }
-    }
+    auto foundGroup = toateGrupurileAprobate.findIf([&profesorLogat](Group* g) {
+        return g->areMembru(profesorLogat->getEmail());
+    });
+    const Group* grupCurent = foundGroup.value_or(nullptr);
 
     if (grupCurent != nullptr && grupCurent->getDataVizitei() == Date::getToday()) {
         std::cout << "\n [NOTIFICARE SISTEM] Grupul dumneavoastra are vizita programata ASTAZI!\n";
@@ -349,10 +337,10 @@ void MuseumApp::handleUtilizator() {
         afiseazaMeniuUtilizator();
         if (!(std::cin >> optUtilizator)) break;
 
-        Group* grupAsociatUtilizator = nullptr;
-        for (const Group* g : toateGrupurileAprobate) {
-            if (g->areMembru(profesorLogat->getEmail())) { grupAsociatUtilizator = const_cast<Group*>(g); break; }
-        }
+        auto foundAssoc = toateGrupurileAprobate.findIf([&profesorLogat](Group* g) {
+            return g->areMembru(profesorLogat->getEmail());
+        });
+        Group* grupAsociatUtilizator = foundAssoc.value_or(nullptr);
         std::cin.ignore(10000, '\n');
 
         switch (optUtilizator) {

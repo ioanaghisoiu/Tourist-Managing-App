@@ -91,6 +91,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         include/IObserver.h
         include/NotificationCenter.h
         src/NotificationCenter.cpp
+        include/Repository.h
 )
 target_sources(${MAIN_EXECUTABLE_NAME}
     PRIVATE

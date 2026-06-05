@@ -9,6 +9,7 @@
 #include "TemporaryExhibition.h"
 #include "InteractiveExhibition.h"
 #include "NotificationCenter.h"
+#include "Repository.h"
 
 class MuseumApp {
 private:
@@ -17,9 +18,9 @@ private:
     TemporaryExhibition fluturi;
     InteractiveExhibition vr;
 
-    std::vector<Group*> toateGrupurileAprobate;
+    Repository<Group*> toateGrupurileAprobate;
     std::vector<Cerere> cereriInAsteptare;
-    std::vector<Professor*> conturiProfesori;
+    Repository<Professor*> conturiProfesori;
     NotificationCenter notificationCenter;
     int urmatorulIdCerere;
 
