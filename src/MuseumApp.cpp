@@ -102,7 +102,7 @@ void MuseumApp::handleAdministrator() {
 
                 std::string emailProfAsociat = "";
                 if (c.getGrupAsociat()) {
-                    auto foundProf = conturiProfesori.findIf([&c](Professor* p) {
+                    auto foundProf = conturiProfesori.findIf([&c](const Professor* p) {
                         return c.getGrupAsociat()->areMembru(p->getEmail());
                     });
                     if (foundProf) emailProfAsociat = (*foundProf)->getEmail();
@@ -152,7 +152,7 @@ void MuseumApp::handleAdministrator() {
                 else if (c.getTip() == "ANULARE_GRUP") {
                     Group* grupDeAnulat = c.getGrupAsociat();
                     notificationCenter.notify(emailProfAsociat, "Anulare completa aprobata.");
-                    toateGrupurileAprobate.removeIf([grupDeAnulat](Group* g) { return g == grupDeAnulat; });
+                    toateGrupurileAprobate.removeIf([grupDeAnulat](const Group* g) { return g == grupDeAnulat; });
                     delete grupDeAnulat;
                     std::cout << "Grup anulat.\n";
                 }
@@ -316,7 +316,7 @@ void MuseumApp::handleUtilizator() {
     notificationCenter.subscribe(profesorLogat->getEmail(), profesorLogat);
     std::cout << "\n[ACCES CONFIRMAT] Bun venit, " << profesorLogat->getName() << ".\n";
 
-    auto foundGroup = toateGrupurileAprobate.findIf([&profesorLogat](Group* g) {
+    auto foundGroup = toateGrupurileAprobate.findIf([&profesorLogat](const Group* g) {
         return g->areMembru(profesorLogat->getEmail());
     });
     const Group* grupCurent = foundGroup.value_or(nullptr);
@@ -337,7 +337,7 @@ void MuseumApp::handleUtilizator() {
         afiseazaMeniuUtilizator();
         if (!(std::cin >> optUtilizator)) break;
 
-        auto foundAssoc = toateGrupurileAprobate.findIf([&profesorLogat](Group* g) {
+        auto foundAssoc = toateGrupurileAprobate.findIf([&profesorLogat](const Group* g) {
             return g->areMembru(profesorLogat->getEmail());
         });
         Group* grupAsociatUtilizator = foundAssoc.value_or(nullptr);
