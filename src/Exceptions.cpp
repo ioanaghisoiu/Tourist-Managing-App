@@ -16,3 +16,7 @@ const char* WrongMuseumException::what() const noexcept {
     return "WrongMuseumException: Grupul are bilet pentru alt muzeu! Acces interzis.";
 }
 
+const char* ConfigFileException::what() const noexcept {
+    return "ConfigFileException: Nu s-a putut deschide fisierul de configurare.";
+}
+

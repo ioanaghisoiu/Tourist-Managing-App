@@ -10,8 +10,9 @@
 #include "TicketFactory.h"
 
 MuseumApp::MuseumApp()
-    : loc("Bucuresti", "Calea Victoriei 12", 179132),
-      antipa("Grigore Antipa", 101, loc),
+    : config(Config::incarcaDinFisier("tastatura.txt")),
+      loc(config.getLocatieOras(), config.getLocatieAdresa(), config.getLocatieSiruta()),
+      antipa(config.getMuzeulNume(), config.getMuzeulCod(), loc),
       fluturi("Fluturi Exotici", 10.0, 50, 5),
       vr("Explorare Subacvatica VR", 30.0, 15, "Casti Oculus"),
       urmatorulIdCerere(1) {
@@ -56,6 +57,7 @@ void MuseumApp::afiseazaMeniuAdministrator() {
     std::cout << "5. Statistici administrative si management locatie muzeu\n";
     std::cout << "6. Administrare si modificare expozitii active\n";
     std::cout << "7. Monitorizare live grupuri in vizita astazi\n";
+    std::cout << "8. Lista profesori inregistrati\n";
     std::cout << "0. Iesire din cont \n";
     std::cout << "Alege o optiune: ";
 }
@@ -65,7 +67,7 @@ void MuseumApp::handleAdministrator() {
     std::cout << "Introduceti parola de administrator: ";
     if (!std::getline(std::cin, parola)) return;
 
-    if (parola != "Ghisoiu.Ioana") {
+    if (parola != config.getParolaAdmin()) {
         std::cout << "[ACCES RESPINS] Parola incorecta!\n\n";
         return;
     }
@@ -187,6 +189,10 @@ void MuseumApp::handleAdministrator() {
                     break;
                 }
 
+                sortBy(toateGrupurileAprobate, [](const Group* a, const Group* b) {
+                    return a->getDataVizitei() < b->getDataVizitei();
+                });
+
                 fout << "RAPORT MANAGER - VIZITE MUZEE\n";
                 fout << "Total grupuri programate: " << toateGrupurileAprobate.size() << "\n\n";
                 double profitTotalEstimativ = 0.0;
@@ -267,6 +273,20 @@ void MuseumApp::handleAdministrator() {
 
                 if (!grupuriActive) {
                     std::cout << "Nu exista niciun grup inregistrat pentru vizita in muzeu astazi.\n";
+                }
+                break;
+            }
+            case 8: {
+                std::cout << "\nLISTA PROFESORI INREGISTRATI (sortati dupa nume)\n";
+                if (conturiProfesori.empty()) {
+                    std::cout << "Nu exista profesori inregistrati.\n";
+                    break;
+                }
+                sortBy(conturiProfesori, [](const Professor* a, const Professor* b) {
+                    return a->getName() < b->getName();
+                });
+                for (const Professor* p : conturiProfesori.getAll()) {
+                    std::cout << "  - " << p->getName() << " | " << p->getEmail() << "\n";
                 }
                 break;
             }

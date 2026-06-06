@@ -30,3 +30,8 @@ public:
           return "PersonNotExistsException: Persoana nu a fost gasita in grup.";
      }
 };
+
+class ConfigFileException : public std::exception {
+public:
+     [[nodiscard]] const char* what() const noexcept override;
+};

@@ -92,6 +92,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         include/NotificationCenter.h
         src/NotificationCenter.cpp
         include/Repository.h
+        include/Config.h
+        src/Config.cpp
 )
 target_sources(${MAIN_EXECUTABLE_NAME}
     PRIVATE

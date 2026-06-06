@@ -1,20 +1,6 @@
-utilizator:
-Nume:Popescu
-Prenume:Gabriel
-Parola:Popescu.Gabriel
-Varsta:35
-An exp.: 10
-Scoala: Colegiul National Micea Cel Batran
-DATA
-zi:15
-luna:06
-an:2026
-ghid:da
-nr studenti:2
-Ionescu
-Elena
-17
-elena.ionescu@yahoo.com
-Colegiul National Micea Cel Batran
-11
-
+muzeu_nume=Grigore Antipa
+muzeu_cod=101
+locatie_oras=Bucuresti
+locatie_adresa=Calea Victoriei 12
+locatie_siruta=179132
+parola_admin=Ghisoiu.Ioana

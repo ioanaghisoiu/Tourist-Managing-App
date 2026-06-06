@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "Config.h"
 #include "Location.h"
 #include "Museum.h"
 #include "Group.h"
@@ -13,6 +14,7 @@
 
 class MuseumApp {
 private:
+    Config config;
     Location loc;
     Museum antipa;
     TemporaryExhibition fluturi;

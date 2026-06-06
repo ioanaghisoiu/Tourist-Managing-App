@@ -34,3 +34,8 @@ std::optional<T> findByEmail(Repository<T>& repo, const std::string& email) {
         return item->getEmail() == email;
     });
 }
+
+template <typename T, typename Comparator>
+void sortBy(Repository<T>& repo, Comparator comp) {
+    std::sort(repo.getAll().begin(), repo.getAll().end(), comp);
+}
