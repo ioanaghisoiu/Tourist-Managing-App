@@ -2,6 +2,7 @@
 #include <string>
 #include "Ticket.h"
 #include "DiscountTicket.h"
+#include "IPricingStrategy.h"
 
 class TicketFactory {
 public:

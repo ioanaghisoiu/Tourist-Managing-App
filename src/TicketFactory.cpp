@@ -1,13 +1,16 @@
 #include "TicketFactory.h"
 
 Ticket* TicketFactory::createStandard(double price, const std::string& currency) {
-    return new Ticket(price, currency, false);
+    StandardPricingStrategy strategy;
+    return new Ticket(strategy.calculatePrice(price), currency, false);
 }
 
 Ticket* TicketFactory::createDiscount(double price, double rate, const std::string& currency) {
-    return new DiscountTicket(price, currency, rate);
+    DiscountPricingStrategy strategy(rate);
+    return new Ticket(strategy.calculatePrice(price), currency, false);
 }
 
 Ticket* TicketFactory::createFree(const std::string& currency) {
-    return new Ticket(0.0, currency, false);
+    FreePricingStrategy strategy;
+    return new Ticket(strategy.calculatePrice(0.0), currency, false);
 }
