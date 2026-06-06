@@ -95,6 +95,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         include/Config.h
         src/Config.cpp
         include/IpricingStrategy.h
+        include/GroupBuilder.h
 )
 target_sources(${MAIN_EXECUTABLE_NAME}
     PRIVATE

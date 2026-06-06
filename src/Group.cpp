@@ -30,6 +30,9 @@ Group& Group::operator=(const Group& other) {
         std::swap(guide, temp.guide);
         std::swap(members, temp.members);
         std::swap(museum_code, temp.museum_code);
+        std::swap(museum_name, temp.museum_name);
+        std::swap(dataVizitei, temp.dataVizitei);
+        std::swap(optiuneVR, temp.optiuneVR);
     }
     return *this;
 }

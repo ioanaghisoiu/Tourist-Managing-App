@@ -1,4 +1,5 @@
 #include "MuseumApp.h"
+#include "GroupBuilder.h"
 #include <iostream>
 #include <fstream>
 #include "Student.h"
@@ -24,16 +25,7 @@ MuseumApp::~MuseumApp() {
     for (const auto& c : cereriInAsteptare) {
         if (c.getTip() == "PROGRAMARE") delete c.getGrupAsociat();
     }
-    for (Professor* p : conturiProfesori.getAll()) {
-        bool dejaSters = false;
-        for (const Group* g : toateGrupurileAprobate.getAll()) {
-            if (g->areMembru(p->getEmail())) {
-                dejaSters = true;
-                break;
-            }
-        }
-        if (!dejaSters) delete p;
-    }
+    for (Professor* p : conturiProfesori.getAll()) delete p;
 }
 
 void MuseumApp::afiseazaMeniuUtilizator(){
@@ -419,12 +411,10 @@ void MuseumApp::handleUtilizator() {
                 std::cout << "Doriti acces la echipamentele interactive VR (taxa suplimentara)? (da/nu): ";
                 std::getline(std::cin, raspunsVR);
 
-                Group* grupNou = new Group("Muzeul Grigore Antipa", 101, dataDorita);
+                Group* grupNou = GroupBuilder(config.getMuzeulNume(), config.getMuzeulCod(), dataDorita)
+                    .withVR(raspunsVR == "da" || raspunsVR == "DA" || raspunsVR == "Da")
+                    .build();
                 grupNou->addMember(profesorLogat->clone());
-
-                if (raspunsVR == "da" || raspunsVR == "DA" || raspunsVR == "Da") {
-                    grupNou->setVR(true);
-                }
 
                 int nrStudenti = 0;
                 std::cout << "\nCati studenti: ";
