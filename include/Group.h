@@ -4,8 +4,9 @@
 #include "Person.h"
 #include "Exceptions.h"
 #include "Date.h"
+#include "Countable.h"
 
-class Group {
+class Group : public Countable<Group> {
 private:
     std::vector<Person*> members;
     Person* guide;

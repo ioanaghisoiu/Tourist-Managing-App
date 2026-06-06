@@ -1,4 +1,4 @@
-#include "Group.h"
+﻿#include "Group.h"
 #include "Professor.h"
 #include <algorithm>
 #include <sstream>
@@ -17,7 +17,7 @@ Group::~Group() {
     members.clear();
 }
 
-Group::Group(const Group& other) : museum_code(other.museum_code), museum_name(other.museum_name), dataVizitei(other.dataVizitei){
+Group::Group(const Group& other) : Countable<Group>(other), museum_code(other.museum_code), museum_name(other.museum_name), dataVizitei(other.dataVizitei){
     guide = other.guide ? other.guide->clone() : nullptr;
     for (const Person* p : other.members) {
         members.push_back(p->clone());

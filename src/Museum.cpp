@@ -9,17 +9,21 @@ Museum::Museum(std::string name_, long code_, Location loc_)
     totalMuseumsCreated++;
 }
 
+Museum::~Museum() {
+    for (Exhibition* ex : exhibitions) delete ex;
+}
+
 int Museum::getTotalMuseums() { return totalMuseumsCreated; }
-void Museum::addExhibition(const Exhibition& ex) { exhibitions.push_back(ex); }
+void Museum::addExhibition(Exhibition* ex) { exhibitions.push_back(ex); }
 
 bool Museum::hasExhibition(const std::string& searchTitle) const {
     return std::any_of(exhibitions.begin(), exhibitions.end(),
-        [&](const Exhibition& ex) { return ex.getTitle() == searchTitle; });
+        [&](const Exhibition* ex) { return ex->getTitle() == searchTitle; });
 }
 
 int Museum::totalItems() const {
     int total = 0;
-    for (const auto& ex : exhibitions) total += ex.getItemsCount();
+    for (const Exhibition* ex : exhibitions) total += ex->getItemsCount();
     return total;
 }
 
@@ -47,6 +51,6 @@ std::ostream& operator<<(std::ostream& os, const Museum& m) {
     os << "MUZEU: " << m.name << " [Cod: " << m.code << "]\n"
        << "Locatie: " << m.location << "\n"
        << "Total exponate: " << m.totalItems() << "\nExpozitii:\n";
-    for (const auto& e : m.exhibitions) os << e << "\n";
+   for (const Exhibition* e : m.exhibitions) os << *e << "\n";
     return os;
 }

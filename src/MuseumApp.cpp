@@ -17,7 +17,9 @@ MuseumApp::MuseumApp()
       fluturi("Fluturi Exotici", 10.0, 50, 5),
       vr("Explorare Subacvatica VR", 30.0, 15, "Casti Oculus"),
       urmatorulIdCerere(1) {
-    antipa.addExhibition(Exhibition("Lumea Insectelor", 15.0, 120));
+    antipa.addExhibition(new Exhibition("Lumea Insectelor", 15.0, 120));
+    antipa.addExhibition(new TemporaryExhibition("Dinozauri Mezozoici", 20.0, 45, 30));
+    antipa.addExhibition(new InteractiveExhibition("Cosmos VR", 25.0, 12, "HTC Vive"));
 }
 
 MuseumApp::~MuseumApp() {
@@ -212,6 +214,7 @@ void MuseumApp::handleAdministrator() {
             case 5: {
                 std::cout << "\nSTATISTICI ADMINISTRATIVE SI MANAGEMENT LOCATIE\n";
                 std::cout << "Total muzee inregistrate in sistem: " << Museum::getTotalMuseums() << "\n";
+                std::cout << "Total grupuri active in sistem: " << Group::getCount() << "\n";
                 std::cout << "Codul unic al muzeului curent: " << antipa.getCode() << "\n";
                 std::cout << "Codul SIRUTA al locatiei: " << loc.getSirutaCode() << "\n";
                 std::cout << "Venituri totale raportate de muzeu: " << antipa.getTotalRevenue() << " RON\n";

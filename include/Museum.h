@@ -13,15 +13,18 @@ private:
     std::string name;
     long code;
     Location location;
-    std::vector<Exhibition> exhibitions;
+    std::vector<Exhibition*> exhibitions;
     std::vector<int> popularityVotes;
     static int totalMuseumsCreated;
     double totalRevenue;
 public:
     Museum(std::string name_, long code_, Location loc_);
+    ~Museum();
+    Museum(const Museum&) = delete;
+    Museum& operator=(const Museum&) = delete;
 
     static int getTotalMuseums();
-    void addExhibition(const Exhibition& ex);
+    void addExhibition(Exhibition* ex);
 
 
     [[nodiscard]] bool hasExhibition(const std::string& searchTitle) const;
